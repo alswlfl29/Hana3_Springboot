@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>회원 가입 페이지 만들기</title>
+    <!-- lg이상일때 미만일때 2가지 해상도만 지원합니다. -->
+
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+            crossorigin="anonymous"
+    />
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css"
+            integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+    />
+    <script>
+        function fetch_dupl() {
+          fetch("http://localhost:8080/dupl", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              inputName: document.getElementById("inputName").value,
+            }),
+          })
+            .then((response) => {
+              console.log(response);
+              return response.json();
+            }) //HTTP 응답
+            .then((json) => {
+              //{ status: "ok", message: "중복된 아이디가 있습니다." }
+              console.log(json);
+              //BS 얼럿에 메시지 표시하기
+              document.getElementById("alert").innerHTML = json.message;
+            }) //실제 데이타
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+    </script>
+</head>
+<body>
+<div class="container-fluid p-4" style="background-color: #eee">
+    <div class="row">
+        <div
+                class="container-fluid"
+                style="
+            background-color: white;
+            max-width: 1200px;
+            border-radius: 20px;
+          "
+        >
+            <div class="row">
+                <!-- 입력폼 -->
+                <form
+                        name="formJoin"
+                        action="http://localhost:8080/join"
+                        method="post"
+                >
+                    <div class="col-12 col-lg-6 order-2 order-lg-1">
+                        <h1 class="my-5 text-center">Sign up</h1>
+                        <th:block th:unless="${ message == null }">
+                            <div id="alert" th:utext="${ message }" class="alert alert-primary" role="alert">
+                                중복된 아이디가 있습니다.
+                            </div>
+                        </th:block>
+                        <div class="mb-3 d-flex flex-row">
+                            <div
+                                    class="d-flex me-2 justify-content-center align-items-center"
+                            >
+                                <i class="fa-solid fa-user fa-xl"></i>
+                            </div>
+                            <input
+                                    type="text"
+                                    class="form-control"
+                                    id="inputName"
+                                    name="inputName"
+                                    placeholder="Your Name"
+                            />
+                            <button
+                                    type="button"
+                                    onclick="fetch_dupl();"
+                                    class="btn btn-primary ms-1"
+                            >
+                                중복확인
+                            </button>
+                        </div>
+                        <div class="mb-3 d-flex flex-row">
+                            <div
+                                    class="d-flex me-2 justify-content-center align-items-center"
+                            >
+                                <i class="fa-solid fa-envelope fa-xl"></i>
+                            </div>
+                            <input
+                                    type="email"
+                                    class="form-control"
+                                    id="inputEmail"
+                                    name="inputEmail"
+                                    placeholder="Your Email"
+                            />
+                        </div>
+                        <div class="mb-3 d-flex flex-row">
+                            <div
+                                    class="d-flex me-2 justify-content-center align-items-center"
+                            >
+                                <i class="fa-solid fa-lock fa-xl"></i>
+                            </div>
+                            <input
+                                    type="password"
+                                    class="form-control"
+                                    id="inputPw"
+                                    name="inputPw"
+                                    placeholder="Your Password"
+                            />
+                        </div>
+                        <div class="mb-3 d-flex flex-row">
+                            <div
+                                    class="d-flex me-2 justify-content-center align-items-center"
+                            >
+                                <i class="fa-solid fa-key fa-xl"></i>
+                            </div>
+                            <input
+                                    type="password"
+                                    class="form-control"
+                                    id="inputPw2"
+                                    name="inputPw2"
+                                    placeholder="Repeat your Password"
+                            />
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input
+                                    type="checkbox"
+                                    class="form-check-input"
+                                    id="exampleCheck1"
+                            />
+                            <label class="form-check-label" for="exampleCheck1"
+                            >I agree all statement
+                                <a style="color: cornflowerblue">Terms of service</a>
+                            </label>
+                        </div>
+                        <div class="text-center my-5">
+                            <button type="submit" class="btn btn-primary">
+                                회원가입
+                            </button>
+                            <a href="/login-form" class="btn btn-danger" role="button">로그인</a>
+                        </div>
+
+                    </div>
+                </form>
+
+                <!-- 이미지 -->
+                <div
+                        class="col-12 col-lg-6 order-1 order-lg-2 d-flex justify-content-center align-items-center"
+                >
+                    <img
+                            src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
+                            alt="이미지"
+                            style="object-fit: contain; width: 100%"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script
+        src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"
+></script>
+<script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa"
+        crossorigin="anonymous"
+></script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>상품수정</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div class="w-1/2 m-auto mt-3 p-4 border border-4 border-black bg-red-700">
+      <h2 class="text-white text-center font-bold text-2xl p-2 mb-3"
+          th:text="#{page.update.title}">
+      </h2>
+      <div class="flex flex-col items-center p-1">
+      <form action="/update" method="post">
+          <label for="name" class="w-full text-white text-lg my-1" th:text="|#{page.update.name}:|">
+          </label>
+          <input
+            class="w-full text-lg rounded-md my-1 py-1"
+            id="name"
+            name="pName"
+            type="text"
+            th:value="${product.name}"
+            required
+          />
+          <label for="price" class="w-full text-white text-lg my-1" th:text="|#{page.update.price}:|"></label>
+          <input
+            class="w-full text-lg rounded-md my-1 py-1"
+            id="price"
+            name="pPrice"
+            type="number"
+            th:value="${product.price}"
+            required
+          />
+          <label for="expDate" class="w-full text-white text-lg" th:text="|#{page.add.limitDate}:|">
+          </label>
+          <input
+            class="w-full text-lg rounded-md my-1 py-1"
+            id="expDate"
+            name="pExpDate"
+            type="text"
+            th:value="${product.limit_date}"
+            required
+          />
+
+          <input type="hidden" name="index" th:value="${ index }">
+          <div class="flex justify-center items-center">
+              <button
+                      type="submit"
+                      class="m-auto mt-3 bg-black text-white text-center w-25 px-3 py-2 font-semibold rounded-md cursor-pointer"
+                      th:text="#{page.update.button.complete}"
+                      onclick="alert('수정되었습니다')"
+              >
+              </button>
+          </div>
+
+      </form>
+    </div>
+      <button
+              onclick="history.back()"
+              class="ml-1 mt-3 bg-white text-black text-center w-25 px-3 py-2 font-semibold rounded-md cursor-pointer"
+              th:text="#{page.button.back}"
+      >
+      </button>
+    </div>
+  </body>
+</html>
