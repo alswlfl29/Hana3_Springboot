@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<!-- xmlns : xml name space XML의 태그와 속성을 정의하는 곳 -->
+<!-- th : 타임리프 관련 태그나 속성은 th로 시작함. -->
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>카운터</title>
+  </head>
+  <body>
+    <h2>카운트: <span th:text="${count}" id="countID">innerText</span></h2>
+    <button type="button" onclick="plus()">더하기</button>
+    <button type="button" onclick="minus()">빼기</button>
+    <script>
+      function plus() {
+        let countId = document.getElementById("countID");
+        fetch(`http://localhost:8080/api/v1/plus`)
+          .then((res) => res.json())
+          .then((res) => {
+            document.getElementById("countID").innerText = res;
+          });
+      }
+      function minus() {
+        let countId = document.getElementById("countID");
+        fetch(`http://localhost:8080/api/v1/minus`)
+          .then((res) => res.json())
+          .then((res) => {
+            document.getElementById("countID").innerText = res;
+          });
+      }
+    </script>
+  </body>
+</html>
