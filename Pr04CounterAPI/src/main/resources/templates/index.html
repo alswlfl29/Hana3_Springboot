@@ -7,25 +7,27 @@
     <title>카운터</title>
   </head>
   <body>
-    <h2>카운트: <span th:text="${count}" id="countID">innerText</span></h2>
+    <h2 id="countId">카운트: [[${count}]]</h2>
     <button type="button" onclick="plus()">더하기</button>
     <button type="button" onclick="minus()">빼기</button>
     <script>
       function plus() {
-        let countId = document.getElementById("countID");
+        let countId = document.getElementById("countId");
         fetch(`http://localhost:8080/api/v1/plus`)
           .then((res) => res.json())
-          .then((res) => {
-            document.getElementById("countID").innerText = res;
-          });
+          .then((data) => {
+            document.getElementById("countId").innerText = "카운트: "+data.result;
+          })
+          .catch((error) => console.log(error));
       }
       function minus() {
-        let countId = document.getElementById("countID");
+        let countId = document.getElementById("countId");
         fetch(`http://localhost:8080/api/v1/minus`)
           .then((res) => res.json())
-          .then((res) => {
-            document.getElementById("countID").innerText = res;
-          });
+          .then((data) => {
+            document.getElementById("countId").innerText = "카운트: "+ data.result;
+          })
+          .catch((error) => console.log(error));
       }
     </script>
   </body>
