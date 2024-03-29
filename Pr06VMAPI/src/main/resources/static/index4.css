@@ -1,0 +1,122 @@
+/* 구글 웹폰트 */
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Giants-Inline";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/Giants-Inline.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "RixInooAriDuriR";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2207-01@1.0/RixInooAriDuriR.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  font-family: "Pretendard-Regular";
+}
+
+.title {
+  font-family: "Giants-Inline";
+  color: rgb(187, 41, 41);
+  text-shadow: -1px 0px white, 0px 1px white, 1px 0px white,
+    0px -1px white;
+  font-size: 24px;
+}
+
+/* 코인 투입구 */
+.coinSlot {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  width: 40px;
+  height: 30px;
+  border: 1px solid white;
+  box-shadow: 2px 2px 1px white;
+}
+.coin {
+  background-color: rgb(255, 255, 255);
+  width: 20px;
+  height: 3px;
+}
+
+/* 언어 선택 버튼 */
+.toggleLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+[type="checkbox"] {
+  appearance: none;
+  position: relative;
+  border: max(2px, 0.1em) solid rgb(255, 255, 255);
+  border-radius: 1.25em;
+  width: 2.25em;
+  height: 1.25em;
+}
+[type="checkbox"]::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  transform: scale(0.8);
+  background-color: rgb(255, 255, 255);
+  transition: left 250ms linear;
+}
+[type="checkbox"]:checked {
+  background-color: tomato;
+  border-color: tomato;
+}
+[type="checkbox"]:checked::before {
+  background-color: white;
+  left: 1em;
+}
+
+[type="checkbox"]:disabled {
+  border-color: lightgray;
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+[type="checkbox"]:disabled:before {
+  background-color: lightgray;
+}
+
+[type="checkbox"]:disabled + span {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+[type="checkbox"]:focus-visible {
+  outline-offset: max(2px, 0.1em);
+  outline: max(2px, 0.1em) solid tomato;
+}
+
+[type="checkbox"]:enabled:hover {
+  box-shadow: 0 0 0 max(4px, 0.2em) rgb(155, 37, 37);
+}
+fieldset {
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.toggleFont {
+  font-weight: bold;
+  color: white;
+}

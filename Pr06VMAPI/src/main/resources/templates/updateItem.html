@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>상품수정</title>
+    <style>
+      /* 폰트 */
+      @font-face {
+        font-family: "Pretendard-Regular";
+        src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+          format("woff");
+        font-weight: 400;
+        font-style: normal;
+      }
+
+      * {
+        font-family: "Pretendard-Regular";
+      }
+      .title {
+        color: rgb(187, 41, 41);
+        margin: 0px;
+        text-shadow: -1px 0px white, 0px 1px white, 1px 0px white,
+          0px -1px white;
+        font-size: 24px;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div class="w-1/2 m-auto mt-3 p-4 border border-4 border-black bg-red-700">
+      <h2
+        class="title text-white text-center p-2 mb-3"
+        th:text="#{page.update.title}"
+      ></h2>
+      <div class="flex flex-col items-center p-1">
+        <label
+          for="name"
+          class="w-full text-white text-lg my-1"
+          th:text="|#{page.update.name}:|"
+        >
+        </label>
+        <input
+          class="w-full text-lg rounded-md my-1 py-1"
+          id="name"
+          name="pName"
+          type="text"
+          th:value="${product.name}"
+          required
+        />
+        <label
+          for="price"
+          class="w-full text-white text-lg my-1"
+          th:text="|#{page.update.price}:|"
+        ></label>
+        <input
+          class="w-full text-lg rounded-md my-1 py-1"
+          id="price"
+          name="pPrice"
+          type="number"
+          th:value="${product.price}"
+          required
+        />
+        <label
+          for="expDate"
+          class="w-full text-white text-lg"
+          th:text="|#{page.add.limitDate}:|"
+        >
+        </label>
+        <input
+          class="w-full text-lg rounded-md my-1 py-1"
+          id="expDate"
+          name="pExpDate"
+          type="text"
+          th:value="${product.limit_date}"
+          required
+        />
+
+        <input type="hidden" id="pId" name="index" th:value="${ index }" />
+        <div class="flex justify-center items-center">
+          <button
+            type="button"
+            class="m-auto mt-3 bg-black text-white text-center w-25 px-3 py-2 font-semibold rounded-md cursor-pointer mr-1"
+            th:text="#{page.update.button.complete}"
+            onclick="updateItem()"
+          ></button>
+          <button
+            onclick="history.back()"
+            type="button"
+            class="ml-1 mt-3 bg-white text-black text-center w-25 px-3 py-2 font-semibold rounded-md cursor-pointer ml-1"
+            th:text="#{page.button.back}"
+          ></button>
+        </div>
+      </div>
+    </div>
+    <script>
+      function updateItem() {
+        let pId = document.getElementById("pId").value;
+        let pName = document.getElementById("name").value;
+        let pPrice = document.getElementById("price").value;
+        let pLimitDate = document.getElementById("expDate").value;
+
+        fetch(`http://localhost:8080/api/v1/update?index=${pId}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          // JSON.stringify(): JS객체를 문자열로 만들어주는 함수
+          body: JSON.stringify({
+            name: pName,
+            price: pPrice,
+            limit_date: pLimitDate,
+          }),
+        })
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            if (data.status === "ok") {
+              alert(data.message);
+              window.location.href = "/";
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    </script>
+  </body>
+</html>
