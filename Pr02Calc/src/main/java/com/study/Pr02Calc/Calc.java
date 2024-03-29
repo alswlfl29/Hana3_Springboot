@@ -6,32 +6,25 @@ import org.springframework.stereotype.Component;
 @Component
 @Data
 public class Calc {
-    private int number1;
-    private int number2;
-    private int result;
-    private double divResult;
+    private double result = 0;
 
-    public void add(int num1, int num2){
-        number1=num1;
-        number2=num2;
+    public int add(int num1, int num2){
         result = num1+num2;
+        return (int) result;
     }
 
-    public void minus(int num1, int num2){
-        number1=num1;
-        number2=num2;
+    public int minus(int num1, int num2){
         result = num1-num2;
+        return (int) result;
     }
 
-    public void multiply(int num1, int num2){
-        number1=num1;
-        number2=num2;
+    public int multiply(int num1, int num2){
         result = num1*num2;
+        return (int) result;
     }
 
-    public void division(int num1, int num2){
-        number1=num1;
-        number2=num2;
-        divResult = (double) num1/num2;
+    public double division(int num1, int num2){
+        result = (double) num1/num2;
+        return result;
     }
 }
