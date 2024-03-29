@@ -47,28 +47,28 @@
         <button
           class="mb-3 w-56 p-2 bg-blue-500 text-white"
           type="button"
-          onclick="add()"
+          onclick="calc('add')"
         >
           덧셈
         </button>
         <button
           class="mb-3 w-56 p-2 bg-blue-500 text-white"
           type="button"
-          onclick="sub()"
+          onclick="calc('minus')"
         >
           뺄셈
         </button>
         <button
           class="mb-3 w-56 p-2 bg-blue-500 text-white"
           type="button"
-          onclick="mul()"
+          onclick="calc('multiply')"
         >
           곱셈
         </button>
         <button
           class="mb-3 w-56 p-2 bg-blue-500 text-white"
           type="button"
-          onclick="div()"
+          onclick="calc('division')"
         >
           나눗셈
         </button>
@@ -82,66 +82,22 @@
       </div>
     </div>
     <script>
-      function add() {
+      function calc(op) {
         let number1 = document.getElementsByName("number1")[0].value;
         let number2 = document.getElementsByName("number2")[0].value;
         if (number1 && number2) {
-          fetch(
-            `http://localhost:8080/api/v1/add?number1=${number1}&number2=${number2}`
-          )
+          fetch("http://localhost:8080/api/v1/calc", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              operation: op,
+              num1: number1,
+              num2: number2,
+            }),
+          })
             .then((res) => res.json())
             .then((data) => {
-              document.getElementsByName("result")[0].value = data;
-            });
-        } else {
-          alert("숫자를 입력해주세요!");
-        }
-      }
-
-      function sub() {
-        let number1 = document.getElementsByName("number1")[0].value;
-        let number2 = document.getElementsByName("number2")[0].value;
-        if (number1 && number2) {
-          fetch(
-            `http://localhost:8080/api/v1/minus?number1=${number1}&number2=${number2}`
-          )
-            .then((res) => res.json())
-            .then((data) => {
-              console.log(data);
-              console.log(document.getElementsByName("result")[0].value);
-              document.getElementsByName("result")[0].value = data;
-            });
-        } else {
-          alert("숫자를 입력해주세요!");
-        }
-      }
-
-      function mul() {
-        let number1 = document.getElementsByName("number1")[0].value;
-        let number2 = document.getElementsByName("number2")[0].value;
-        if (number1 && number2) {
-          fetch(
-            `http://localhost:8080/api/v1/multiply?number1=${number1}&number2=${number2}`
-          )
-            .then((res) => res.json())
-            .then((data) => {
-              document.getElementsByName("result")[0].value = data;
-            });
-        } else {
-          alert("숫자를 입력해주세요!");
-        }
-      }
-
-      function div() {
-        let number1 = document.getElementsByName("number1")[0].value;
-        let number2 = document.getElementsByName("number2")[0].value;
-        if (number1 && number2) {
-          fetch(
-            `http://localhost:8080/api/v1/division?number1=${number1}&number2=${number2}`
-          )
-            .then((res) => res.json())
-            .then((data) => {
-              document.getElementsByName("result")[0].value = data;
+              document.getElementsByName("result")[0].value = data.result;
             });
         } else {
           alert("숫자를 입력해주세요!");

@@ -4,6 +4,5 @@ import lombok.Data;
 
 @Data
 public class ResDto {
-    private int result;
-    private double divResult;
+    private double result;
 }

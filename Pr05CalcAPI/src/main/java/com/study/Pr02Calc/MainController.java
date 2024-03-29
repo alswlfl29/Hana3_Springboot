@@ -13,9 +13,7 @@ public class MainController {
 
     @GetMapping("/")
     public String index(Model model){
-        model.addAttribute("number1", calc.getNumber1());
-        model.addAttribute("number2", calc.getNumber2());
-        model.addAttribute("result", calc.getResult());
+        model.addAttribute("result", (int) calc.getResult());
         return "index";
     }
 }
