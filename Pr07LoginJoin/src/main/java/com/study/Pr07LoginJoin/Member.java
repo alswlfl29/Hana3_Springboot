@@ -1,28 +1,34 @@
 package com.study.Pr07LoginJoin;
 
-import lombok.Data;
-import lombok.NonNull;
+import lombok.Builder;
+import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
-import static com.study.Pr07LoginJoin.MainRepository.memberList;
 
-@Data
+@Getter
 @Component
 public class Member {
-
     private String username;
     private String password;
     private String email;
     private LocalDate joinDate;
 
-    public boolean checkDuplication(String name){
-        for(Member member:memberList){
-            if(member.getUsername().equals(name)) {
-                return true;
-            }
-        }
-        return false;
+    public boolean isDuplicateName(String name) {
+        return this.username.equals(name);
     }
+
+    public boolean isExistMember(String name, String password){
+        return isDuplicateName(name) && this.password.equals(password);
+    }
+
+    @Builder
+    private Member(String username, String password, String email, LocalDate joinDate) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.joinDate = joinDate;
+    }
+
 }

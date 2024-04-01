@@ -1,8 +1,8 @@
 package com.study.Pr07LoginJoin;
 
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class LoginReqDto {
     private String inputName;
     private String inputPw;

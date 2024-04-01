@@ -1,10 +1,9 @@
 package com.study.Pr07LoginJoin;
 
-import jakarta.validation.constraints.NotEmpty;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
-public class ReqDto {
+@Getter
+public class JoinReqDto {
     private String inputName;
     private String inputEmail;
     private String inputPw;

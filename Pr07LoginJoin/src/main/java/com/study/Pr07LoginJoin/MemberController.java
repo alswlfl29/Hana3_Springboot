@@ -1,7 +1,5 @@
 package com.study.Pr07LoginJoin;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,13 +8,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Map;
 
-import static com.study.Pr07LoginJoin.MainRepository.memberList;
-
 @Controller
 @RequiredArgsConstructor
-public class MainController {
-    final Member member;
-    private final MainService mainService;
+public class MemberController {
+
+    private final MemberService memberService;
 
     @GetMapping("/")
     public String main(){
@@ -29,33 +25,26 @@ public class MainController {
         return "join";
     }
 
-    @PostMapping("/dupli")
+    @PostMapping("/duplicate")
     @ResponseBody
     public ResDto checkDuplicate(@RequestBody Map<String, String> inputName){
-        boolean check = member.checkDuplication(inputName.get("inputName"));
+        boolean check = memberService.checkDuplication(inputName.get("inputName"));
 
-        ResDto resDto = new ResDto();
         if(inputName.get("inputName").isEmpty()){
-            resDto.setStatus("fail-name");
-            resDto.setMessage("이름을 입력해주세요!");
-            return resDto;
+            return new ResDto("fail-name","이름을 입력해주세요!");
         }
-
         if(check){
-            resDto.setStatus("fail");
-            resDto.setMessage( "중복된 아이디가 있습니다.");
+            return new ResDto("fail", "중복된 아이디가 있습니다.");
         }else{
-            resDto.setStatus("success");
-            resDto.setMessage( "중복된 아이디가 없습니다.");
+            return new ResDto("success", "중복된 아이디가 없습니다.");
         }
-        return resDto;
     }
 
     @PostMapping("/join")
-    public String join(RedirectAttributes rttr, ReqDto reqDto, Model model){
+    public String join(RedirectAttributes rttr, JoinReqDto reqDto){
         ResDto resDto = new ResDto();
 
-        mainService.create(reqDto);
+        memberService.create(reqDto);
         resDto.setStatus("success");
         resDto.setMessage("회원가입 성공!");
 
@@ -72,20 +61,17 @@ public class MainController {
     @PostMapping("/login")
     public String login(LoginReqDto loginReqDto, Model model){
         ResDto resDto = new ResDto();
-        if(memberList.isEmpty()){
+
+        if(memberService.isEmptyMembers()){
             resDto.setStatus("fail");
             resDto.setMessage("로그인 실패(회원 목록에 존재하지 않습니다.)");
         }else{
-            for(Member member:memberList){
-                if(member.getUsername().equals(loginReqDto.getInputName())
-                        && member.getPassword().equals(loginReqDto.getInputPw())){
-                    resDto.setStatus("success");
-                    resDto.setMessage("로그인 성공");
-                    break;
-                }else{
-                    resDto.setStatus("fail");
-                    resDto.setMessage("로그인 실패(회원 목록에 존재하지 않습니다.)");
-                }
+            if(memberService.isExistMember(loginReqDto)){
+                resDto.setStatus("success");
+                resDto.setMessage("로그인 성공");
+            }else{
+                resDto.setStatus("fail");
+                resDto.setMessage("로그인 실패(회원 목록에 존재하지 않습니다.)");
             }
         }
         model.addAttribute("status",resDto.getStatus());
