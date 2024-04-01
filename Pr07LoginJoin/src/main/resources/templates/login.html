@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>로그인 페이지</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css"
+      integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      .form-container {
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid p-4" style="background-color: #eee">
+      <div class="row">
+        <div
+          class="container-fluid"
+          style="
+            background-color: white;
+            max-width: 1200px;
+            border-radius: 20px;
+          "
+        >
+          <div class="row">
+            <!-- 입력폼 -->
+            <form name="formLogin" action="/login" method="post">
+              <div class="form-container col-12 col-lg-6 order-2 order-lg-1">
+                <h1 class="my-5 text-center">Login</h1>
+                <div th:if="${message==null}" style="display: none"></div>
+
+                <div
+                  th:if="${message!=null}"
+                  id="alert"
+                  class="alert alert-success"
+                  role="alert"
+                  th:text="${message}"
+                ></div>
+                <div class="mb-3 d-flex flex-row">
+                  <div
+                    class="d-flex me-2 justify-content-center align-items-center"
+                  >
+                    <i class="fa-solid fa-user fa-xl"></i>
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="inputName"
+                    name="inputName"
+                    placeholder="Your Name"
+                  />
+                </div>
+
+                <div class="mb-3 d-flex flex-row">
+                  <div
+                    class="d-flex me-2 justify-content-center align-items-center"
+                  >
+                    <i class="fa-solid fa-lock fa-xl"></i>
+                  </div>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="inputPw"
+                    name="inputPw"
+                    placeholder="Your Password"
+                  />
+                </div>
+
+                <div class="mb-3 d-flex flex-row justify-content-center gap-3">
+                  <div class="text-center my-5">
+                    <button
+                      id="sendLoginBtn"
+                      type="button"
+                      class="btn btn-primary"
+                    >
+                      로그인
+                    </button>
+                  </div>
+                  <div class="text-center my-5">
+                    <button
+                      type="button"
+                      class="btn btn-danger"
+                      onclick="join_form();"
+                    >
+                      회원가입
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const join_form = () => {
+        window.location.href = "/join";
+      };
+      let loginBtn = document.getElementById("sendLoginBtn");
+
+      loginBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        let formName = document.getElementsByName("formLogin")[0];
+
+        if (isEmptyCheck()) {
+          formName.submit();
+        } else {
+          return;
+        }
+      });
+
+      const isEmptyCheck = () => {
+        let inputName = document.getElementById("inputName").value;
+        let inputPw = document.getElementById("inputPw").value;
+
+        if (inputName == "") {
+          alert("이름을 입력해주세요!");
+          document.getElementById("inputName").focus();
+          return false;
+        } else if (inputPw == "") {
+          alert("비밀번호를 입력해주세요!");
+          document.getElementById("inputPw").focus();
+          return false;
+        }
+        return true;
+      };
+    </script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"
+      integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
