@@ -37,17 +37,25 @@ public class MemberEntity {
     private Long id; // bigint
     // @Column: DB 열과 매칭 - 변수이름과 DB열의 이름이 다를 때 매칭해준다.
     @Column(name="user_id")
-    private String user_id; // varchar
-    @Column
-    private String user_pw;
-    @Column
-    private String user_name;
-    @Column
-    private String user_role;
+    // DB 필드 "user_id" -> "userId" 언더바가 생략되어 매핑됨.
+    private String userId; // varchar
+    @Column(name="user_pw")
+    private String userPw;
+    @Column(name="user_name")
+    private String userName;
+    @Column(name="user_role")
+    private String userRole;
     @Column
     // @JSONFormat: @RequestBody @ResponseBody 매핑
     // @DateTimeFormat: @RequestParam @ModelAttribute 매핑
     //                 DB Date 데이터를 가져올 때, 형식화해줌.
     @DateTimeFormat(pattern = "yyyy-mm-dd")
     private LocalDate joindate;
+
+    public void update(String userId, String userPw, String userName, String userRole){
+        this.userId=userId;
+        this.userPw=userPw;
+        this.userName=userName;
+        this.userRole=userRole;
+    }
 }
