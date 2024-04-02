@@ -1,6 +1,7 @@
 package com.study.Pr07LoginJoin;
 
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -10,5 +11,6 @@ public class UpdateReqDto {
     private String inputName;
     private String inputPw;
     private String inputEmail;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate inputJoindate;
 }

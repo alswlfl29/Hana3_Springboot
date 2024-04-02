@@ -3,6 +3,7 @@ package com.study.Pr07LoginJoin;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -14,6 +15,7 @@ public class Member {
     private String username;
     private String password;
     private String email;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate joinDate;
 
     @Builder
