@@ -58,6 +58,7 @@
                   id="inputName"
                   name="inputName"
                   placeholder="Your Name"
+                  required
                 />
               </div>
 
@@ -73,13 +74,13 @@
                   id="inputPw"
                   name="inputPw"
                   placeholder="Your Password"
+                  required
                 />
               </div>
 
               <div class="mb-3 d-flex flex-row justify-content-center gap-3">
                 <div class="text-center my-5">
                   <button
-                    id="sendLoginBtn"
                     type="button"
                     class="btn btn-primary"
                     onclick="login()"
@@ -107,7 +108,7 @@
       const join_form = () => {
         window.location.href = "/join";
       };
-      let loginBtn = document.getElementById("sendLoginBtn");
+
       let alertHTML = document.getElementById("alert");
       if (sessionStorage.getItem("joinSuccess")) {
         alertHTML.style = "display:show";
@@ -117,37 +118,31 @@
       const login = () => {
         let inputName = document.getElementById("inputName").value;
         let inputPw = document.getElementById("inputPw").value;
-        if (isEmptyCheck(inputName, inputPw)) {
-          fetch("http://localhost:8080/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              inputName,
-              inputPw,
-            }),
-          })
-            .then((res) => res.json())
-            .then((data) => {
-              alertHTML.style = "display:show";
-              alertHTML.innerText = data.message;
-            })
-            .catch((error) => console.error(error));
-        } else {
+
+        if (inputName === "") {
+          alert("이름을 입력해주세요.");
+          document.getElementById("inputName").focus();
+          return;
+        } else if (inputPw === "") {
+          alert("비밀번호를 입력해주세요.");
+          document.getElementById("inputPw").focus();
           return;
         }
-      };
 
-      const isEmptyCheck = (inputName, inputPw) => {
-        if (inputName == "") {
-          alert("이름을 입력해주세요!");
-          document.getElementById("inputName").focus();
-          return false;
-        } else if (inputPw == "") {
-          alert("비밀번호를 입력해주세요!");
-          document.getElementById("inputPw").focus();
-          return false;
-        }
-        return true;
+        fetch("http://localhost:8080/api/v1/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            inputName,
+            inputPw,
+          }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            alertHTML.style = "display:show";
+            alertHTML.innerText = data.message;
+          })
+          .catch((error) => console.error(error));
       };
     </script>
 

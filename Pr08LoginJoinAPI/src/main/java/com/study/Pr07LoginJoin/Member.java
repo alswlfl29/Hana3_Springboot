@@ -1,28 +1,29 @@
 package com.study.Pr07LoginJoin;
 
-import lombok.Data;
-import lombok.NonNull;
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
-import static com.study.Pr07LoginJoin.MainRepository.memberList;
-
 @Data
 @Component
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Member {
 
     private String username;
     private String password;
     private String email;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate joinDate;
 
     public boolean checkDuplication(String name){
-        for(Member member:memberList){
-            if(member.getUsername().equals(name)) {
-                return true;
-            }
-        }
-        return false;
+        return this.username.equals(name);
+    }
+
+    public boolean isMember(String name, String password){
+        return checkDuplication(name) && this.password.equals(password);
     }
 }

@@ -1,73 +1,43 @@
 package com.study.Pr07LoginJoin;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-import static com.study.Pr07LoginJoin.MainRepository.memberList;
-
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/v1")
 public class ApiController {
-    final Member member;
-    private final MainService mainService;
-    @PostMapping("/dupli")
+    private final MemberService memberService;
+    @PostMapping("/duplicate")
     @ResponseBody
     public ResDto checkDuplicate(@RequestBody Map<String, String> inputName){
-        boolean check = member.checkDuplication(inputName.get("inputName"));
-
-        ResDto resDto = new ResDto();
-        if(inputName.get("inputName").isEmpty()){
-            resDto.setStatus("fail-name");
-            resDto.setMessage("이름을 입력해주세요!");
-            return resDto;
-        }
+        boolean check = memberService.checkDuplication(inputName.get("inputName"));
 
         if(check){
-            resDto.setStatus("fail");
-            resDto.setMessage( "중복된 아이디가 있습니다.");
+            return new ResDto("fail", "중복된 아이디가 있습니다.");
         }else{
-            resDto.setStatus("success");
-            resDto.setMessage( "중복된 아이디가 없습니다.");
+            return new ResDto("success", "중복된 아이디가 없습니다.");
         }
-        return resDto;
+
     }
 
     @PostMapping("/join")
-    public ResDto join(@RequestBody ReqDto reqDto){
-        ResDto resDto = new ResDto();
-
-        mainService.create(reqDto);
-        resDto.setStatus("success");
-        resDto.setMessage("회원가입 성공!");
-
-        return resDto;
+    public ResDto join(@RequestBody JoinReqDto joinReqDto){
+        memberService.create(joinReqDto);
+        return new ResDto("success","회원가입 성공!");
     }
 
     @PostMapping("/login")
     public ResDto login(@RequestBody LoginReqDto loginReqDto){
-        ResDto resDto = new ResDto();
-        if(memberList.isEmpty()){
-            resDto.setStatus("fail");
-            resDto.setMessage("로그인 실패(회원 목록에 존재하지 않습니다.)");
-        }else{
-            for(Member member:memberList){
-                if(member.getUsername().equals(loginReqDto.getInputName())
-                        && member.getPassword().equals(loginReqDto.getInputPw())){
-                    resDto.setStatus("success");
-                    resDto.setMessage("로그인 성공");
-                    break;
-                }else{
-                    resDto.setStatus("fail");
-                    resDto.setMessage("로그인 실패(회원 목록에 존재하지 않습니다.)");
-                }
-            }
+        if(memberService.isEmpty()){
+            return new ResDto("fail","로그인 실패(회원 목록에 존재하지 않습니다.)");
         }
-
-        return resDto;
+        if(memberService.checkIsMember(loginReqDto)){
+            return new ResDto("success","로그인 성공");
+        }else{
+            return new ResDto("fail","로그인 실패(회원 목록에 존재하지 않습니다.)");
+        }
     }
 }

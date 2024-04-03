@@ -6,10 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class MainRepository {
+public class MemberRepository {
     public static List<Member> memberList = new ArrayList<>();
 
     public void save(Member member){
         memberList.add(member);
+    }
+
+    public List<Member> getMembers(){
+        return new ArrayList<>(memberList);
     }
 }
