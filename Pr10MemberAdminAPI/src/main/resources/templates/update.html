@@ -52,7 +52,7 @@
                   class="form-control"
                   id="inputName"
                   name="inputName"
-                  th:value="${member.username}"
+                  value=""
                   placeholder="Your Name"
                 />
               </div>
@@ -68,7 +68,7 @@
                   class="form-control"
                   id="inputPw"
                   name="inputPw"
-                  th:value="${member.password}"
+                  value=""
                   placeholder="Your Password"
                 />
               </div>
@@ -84,7 +84,7 @@
                   class="form-control"
                   id="inputEmail"
                   name="inputEmail"
-                  th:value="${member.email}"
+                  value=""
                   placeholder="Your Email"
                 />
               </div>
@@ -100,17 +100,10 @@
                   class="form-control"
                   id="inputJoindate"
                   name="inputJoindate"
-                  th:value="${member.joinDate}"
+                  value=""
                   placeholder="Join Date"
                 />
               </div>
-
-              <input
-                id="index"
-                type="hidden"
-                name="index"
-                th:value="${index}"
-              />
 
               <div class="text-center my-5">
                 <button
@@ -134,12 +127,28 @@
       </div>
     </div>
     <script>
+      const urlParams = new URL(location.href).searchParams;
+      const index = urlParams.get("index");
+      window.addEventListener("load", function () {
+        fetch(`http://localhost:8080/api/v1/member?index=${index}`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            document.getElementById("inputName").value = data.username;
+            document.getElementById("inputEmail").value = data.email;
+            document.getElementById("inputPw").value = data.password;
+            document.getElementById("inputJoindate").value = data.joinDate;
+          });
+      });
+
       const updateFn = () => {
         fetch("http://localhost:8080/api/v1/update", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            index: document.getElementById("index").value,
+            index,
             inputName: document.getElementById("inputName").value,
             inputPw: document.getElementById("inputPw").value,
             inputEmail: document.getElementById("inputEmail").value,

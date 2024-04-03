@@ -24,39 +24,17 @@
           <h1 class="my-5 text-center">관리자페이지 - 회원목록</h1>
 
           <table class="table table-striped">
-            <tr>
-              <th>번호</th>
-              <th>아이디</th>
-              <th>암호</th>
-              <th>이메일</th>
-              <th>가입일</th>
-              <th class="text-center">수정</th>
-              <th class="text-center">삭제</th>
-            </tr>
-            <tr th:each="member, i:${members}">
-              <td th:text="${i.count}"></td>
-              <td th:text="${member.username}">admin</td>
-              <td th:text="${member.password}">1234</td>
-              <td th:text="${member.email}">admin@gmail.com</td>
-              <td th:text="${member.joinDate}">2024-03-29</td>
-              <td class="text-center">
-                <a
-                  th:href="|/update?index=${i.index}|"
-                  class="btn btn-danger"
-                  role="button"
-                  >수정</a
-                >
-              </td>
-              <td class="text-center">
-                <button
-                  th:pId="${i.index}"
-                  class="btn btn-danger"
-                  onclick="deleteFn(this.getAttribute('pId'));"
-                >
-                  삭제
-                </button>
-              </td>
-            </tr>
+            <tbody id="member-tbody">
+              <tr>
+                <th>번호</th>
+                <th>아이디</th>
+                <th>암호</th>
+                <th>이메일</th>
+                <th>가입일</th>
+                <th class="text-center">수정</th>
+                <th class="text-center">삭제</th>
+              </tr>
+            </tbody>
           </table>
 
           <div class="text-center my-5">
@@ -67,6 +45,47 @@
       </div>
     </div>
     <script>
+      window.addEventListener("load", function () {
+        fetch("/api/v1/members", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        })
+          .then((res) => res.json())
+          .then((data) => makeMemberList(data));
+      });
+
+      const makeMemberList = (memberList) => {
+        let tableHead = document.getElementById("member-tbody");
+        memberList.map((member, idx) => {
+          tableHead.insertAdjacentHTML(
+            "beforeend",
+            `<tr>
+              <td>${idx + 1}</td>
+              <td>${member.username}</td>
+              <td>${member.password}</td>
+              <td>${member.email}</td>
+              <td>${member.joinDate}</td>
+              <td class="text-center">
+                <a
+                  href="/update?index=${idx}"
+                  class="btn btn-danger"
+                  role="button"
+                  >수정</a
+                >
+              </td>
+              <td class="text-center">
+                <button
+                  class="btn btn-danger"
+                  onclick="deleteFn(${idx});"
+                >
+                  삭제
+                </button>
+              </td>
+            </tr>`
+          );
+        });
+      };
+
       const deleteFn = (index) => {
         fetch(`http://localhost:8080/api/v1/delete?index=${index}`)
           .then((res) => res.json())

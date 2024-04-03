@@ -30,18 +30,13 @@ public class MemberController {
 
     // 관리자화면
     @GetMapping("/list")
-    public String list(Model model){
-        List<Member> members = memberService.memberList();
-        model.addAttribute("members",members);
+    public String list(){
         return "list";
     }
 
     // 수정화면
     @GetMapping("/update")
-    public String update(@RequestParam int index, Model model ){
-        Member member = memberService.getMemberData(index);
-        model.addAttribute("member",member);
-        model.addAttribute("index",index);
+    public String update(){
         return "update";
     }
 }

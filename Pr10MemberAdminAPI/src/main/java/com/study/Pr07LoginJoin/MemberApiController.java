@@ -2,6 +2,8 @@ package com.study.Pr07LoginJoin;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -11,7 +13,7 @@ public class MemberApiController {
     private final MemberService memberService;
 
     // 회원가입
-    @PostMapping("/dupli")
+    @PostMapping("/duplicate")
     public ResDto checkDuplicate(@RequestBody Map<String, String> inputName){
         boolean check = memberService.checkDuplication(inputName.get("inputName"));
 
@@ -49,7 +51,17 @@ public class MemberApiController {
         }
     }
 
+    // 목록
+    @GetMapping("/members")
+    public List<Member> getMembers(){
+        return memberService.memberList();
+    }
+
     // 수정
+    @GetMapping("/member")
+    public Member update(@RequestParam int index){
+        return memberService.getMemberData(index);
+    }
     @PostMapping("/update")
     public ResDto update(@RequestBody UpdateReqDto updateReqDto){
         memberService.updateMember(updateReqDto);
