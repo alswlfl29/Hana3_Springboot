@@ -55,14 +55,8 @@
         </div>
       </div>
       <div class="bg-white text-center font-semibold mb-3 p-3">
-        <span
-          th:if="${#lists.isEmpty(productList)}"
-          th:text="#{page.noList}"
-        ></span>
-        <table
-          th:if="${!#lists.isEmpty(productList)}"
-          class="border border-red-600 w-full"
-        >
+        <span id="noList"></span>
+        <table id="listTable" class="border border-red-600 w-full">
           <thead>
             <tr>
               <th class="text-red-600" th:text="#{page.list.no}"></th>
@@ -73,36 +67,13 @@
               <th th:text="#{page.list.delete}">삭제</th>
             </tr>
           </thead>
-          <tbody>
-            <tr th:each="product, i: ${productList}">
-              <td class="font-semibold" th:text="${i.count}"></td>
-              <td th:text="${product.name}"></td>
-              <td th:text="${product.price}"></td>
-              <td th:text="${product.limit_date}"></td>
-              <td class="p-1.5">
-                <a
-                  class="bg-blue-500 py-2 px-3 text-white border border-none rounded-md font-semibold"
-                  th:href="|/update?index=${i.index}|"
-                  th:text="#{page.list.update}"
-                ></a>
-              </td>
-              <td class="p-1.5">
-                <button
-                  id="delBtn"
-                  th:pId="${i.index}"
-                  onclick="deleteItem(this.getAttribute('pId'))"
-                  class="bg-red-500 py-2 px-3 text-white border border-none rounded-md font-semibold"
-                  th:text="#{page.list.delete}"
-                ></button>
-              </td>
-            </tr>
-          </tbody>
+          <tbody id="product-tbody"></tbody>
         </table>
       </div>
       <div class="flex justify-end">
         <p
           class="w-52 bg-white text-center text-red-700 mb-3 px-2 py-1 rounded-l-lg"
-          th:utext="'▲ ' + #{page.list.count1} + ' <span class=\'text-black\'>' + ${productLen}+'</span> ' + #{page.list.count2}"
+          th:utext="'▲ ' + #{page.list.count1} + ' <span id=\'productCnt\' class=\'text-black\'></span> ' + #{page.list.count2}"
         ></p>
       </div>
       <div class="flex justify-center">
@@ -114,8 +85,63 @@
       </div>
     </div>
     <script>
+      // DOM이 로드되고 나서 호출되는 이벤트 콜백 함수
+      window.addEventListener("load", (e) => {
+        // Restful API 서버에 리스트 요청하기
+        fetch("/api/v1/products", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            makeProductList(data);
+          })
+          .catch((error) => console.error(error));
+      });
+
+      const makeProductList = (productList) => {
+        let productCnt = document.getElementById("productCnt");
+        productCnt.innerText = productList.length;
+
+        let noList = document.getElementById("noList");
+        let listTable = document.getElementById("listTable");
+
+        if (!productList.length) {
+          noList.innerText = "상품 목록이 비어있습니다.";
+          listTable.style = "display:none";
+        } else {
+          noList.style = "display:none";
+          let tableBody = document.getElementById("product-tbody");
+          productList.map((product, idx) => {
+            tableBody.insertAdjacentHTML(
+              "beforeend",
+              ` <tr>
+              <td class="font-semibold">${idx + 1}</td>
+              <td>${product.name}</td>
+              <td>${product.price}</td>
+              <td>${product.limit_date}</td>
+              <td class="p-1.5">
+                <a
+                  class="bg-blue-500 py-2 px-3 text-white border border-none rounded-md font-semibold"
+                  href="/update?index=${idx}"
+                  th:text="#{page.list.update}"
+                >수정</a>
+              </td>
+              <td class="p-1.5">
+                <button
+                  id="delBtn"
+                  onclick="deleteItem(${idx})"
+                  class="bg-red-500 py-2 px-3 text-white border border-none rounded-md font-semibold"
+                  th:text="#{page.list.delete}"
+                >삭제</button>
+              </td>
+            </tr>`
+            );
+          });
+        }
+      };
+
       const checkBtn = document.getElementById("changeToEng");
-      console.log();
       if (sessionStorage.getItem("lang") === "en") checkBtn.checked = true;
       else checkBtn.checked = false;
 

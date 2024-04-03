@@ -1,18 +1,23 @@
 package com.study.Pr06VMAPI;
 
 import jakarta.servlet.http.HttpSession;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
-import static com.study.Pr06VMAPI.MainController.productList;
 
 @RestController
 @RequestMapping("/api/v1")
 public class ApiController {
+    private static List<Product> productList = new ArrayList<>();
+    @GetMapping("/products")
+    public List<Product> products(){
+        return productList;
+    }
     @PostMapping("/add")
     public ResDto productAdd(@RequestBody ReqDto reqDto){
         Product product = new Product();
@@ -26,9 +31,14 @@ public class ApiController {
         resDto.setMessage("상품이 추가되었습니다.");
         return resDto;
     }
-    @PostMapping("/update")
+
+    @GetMapping("/update/product")
+    public Product productUpdate(@RequestParam int index){
+        return productList.get(index);
+    }
+    @PutMapping("/update")
     public ResDto updateAction(@RequestParam int index, @RequestBody ReqDto reqDto){
-        Product product = new Product();
+        Product product = productList.get(index);
         product.setName(reqDto.getName());
         product.setPrice(reqDto.getPrice());
         product.setLimit_date(reqDto.getLimit_date());
