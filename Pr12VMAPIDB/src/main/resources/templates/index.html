@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>자판기</title>
+    <link href="./index4.css" rel="stylesheet" type="text/css" />
+    <!--  부트스트랩 CDN 링크 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+      crossorigin="anonymous"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      th,
+      td {
+        border: 1px solid rgb(220 38 38);
+        padding: 10px;
+      }
+      td {
+        font-weight: 400;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="w-1/2 m-auto mt-3 p-4 border border-4 border-black bg-red-700">
+      <h2
+        class="bg-white text-center p-2 rounded-t-lg title mb-3"
+        th:text="|* #{page.title} *|"
+      ></h2>
+      <div class="flex justify-between items-center mb-3">
+        <div
+          class="p-2 bg-white text-red-700 text-center rounded-r-lg"
+          th:text="|▽ #{page.listName}|"
+        >
+          ▽ 자판기 상품 목록
+        </div>
+        <!-- 언어 선택 -->
+        <fieldset>
+          <label class="toggleLabel">
+            <span class="toggleFont">한글</span>
+            <input
+              role="switch"
+              type="checkbox"
+              id="changeToEng"
+              class="languageToggle"
+            />
+            <span class="toggleFont">ENG</span>
+          </label>
+        </fieldset>
+        <!-- 코인 모양 -->
+        <div class="coinSlot rounded-pill">
+          <div class="coin"></div>
+        </div>
+      </div>
+      <div class="bg-white text-center font-semibold mb-3 p-3">
+        <span id="noList"></span>
+        <table id="listTable" class="border border-red-600 w-full">
+          <thead>
+            <tr>
+              <th class="text-red-600" th:text="#{page.list.no}"></th>
+              <th th:text="#{page.list.name}">상품명</th>
+              <th th:text="#{page.list.price}">가격</th>
+              <th th:text="#{page.list.limitDate}">유통기한</th>
+              <th th:text="#{page.list.update}">수정</th>
+              <th th:text="#{page.list.delete}">삭제</th>
+            </tr>
+          </thead>
+          <tbody id="product-tbody"></tbody>
+        </table>
+      </div>
+      <div class="flex justify-end">
+        <p
+          class="w-52 bg-white text-center text-red-700 mb-3 px-2 py-1 rounded-l-lg"
+          th:utext="'▲ ' + #{page.list.count1} + ' <span id=\'productCnt\' class=\'text-black\'></span> ' + #{page.list.count2}"
+        ></p>
+      </div>
+      <div class="flex justify-center">
+        <a
+          class="bg-red-500 text-white text-center w-25 px-3 py-2 font-semibold rounded-md cursor-pointer"
+          href="/addForm"
+          th:text="#{page.button.add}"
+        ></a>
+      </div>
+    </div>
+    <script>
+      // DOM이 로드되고 나서 호출되는 이벤트 콜백 함수
+      window.addEventListener("load", (e) => {
+        // Restful API 서버에 리스트 요청하기
+        fetch("/api/v1/products", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.status === "success") {
+              makeProductList(data.lists);
+            } else {
+              alert(data.message);
+              location.href = "/list";
+            }
+          })
+          .catch((error) => console.error(error));
+      });
+
+      const makeProductList = (productList) => {
+        let productCnt = document.getElementById("productCnt");
+        productCnt.innerText = productList.length;
+
+        let noList = document.getElementById("noList");
+        let listTable = document.getElementById("listTable");
+
+        if (!productList.length) {
+          noList.innerText = "상품 목록이 비어있습니다.";
+          listTable.style = "display:none";
+        } else {
+          noList.style = "display:none";
+          let tableBody = document.getElementById("product-tbody");
+          productList.map((product, idx) => {
+            tableBody.insertAdjacentHTML(
+              "beforeend",
+              ` <tr>
+              <td class="font-semibold">${idx + 1}</td>
+              <td>${product.name}</td>
+              <td>${product.price}</td>
+              <td>${product.limitDate}</td>
+              <td class="p-1.5">
+                <a
+                  class="bg-blue-500 py-2 px-3 text-white border border-none rounded-md font-semibold"
+                  href="/update?id=${product.id}"
+                  th:text="#{page.list.update}"
+                >수정</a>
+              </td>
+              <td class="p-1.5">
+                <button
+                  id="delBtn"
+                  onclick="deleteItem(${product.id})"
+                  class="bg-red-500 py-2 px-3 text-white border border-none rounded-md font-semibold"
+                  th:text="#{page.list.delete}"
+                >삭제</button>
+              </td>
+            </tr>`
+            );
+          });
+        }
+      };
+
+      const checkBtn = document.getElementById("changeToEng");
+      if (sessionStorage.getItem("lang") === "en") checkBtn.checked = true;
+      else checkBtn.checked = false;
+
+      checkBtn.addEventListener("click", function () {
+        fetch("http://localhost:8080/api/v1/changeLocale")
+          .then((res) => res.text())
+          .then((data) => {
+            if (data === "en") {
+              checkBtn.checked = true;
+              sessionStorage.setItem("lang", "en");
+            } else {
+              checkBtn.checked = false;
+              sessionStorage.setItem("lang", "ko");
+            }
+            location.reload();
+          });
+      });
+
+      function deleteItem(id) {
+        fetch(`http://localhost:8080/api/v1/deleteProduct?id=${id}`)
+          .then((response) => response.json())
+          .then((data) => {
+            alert(data.message);
+            if (data.status === "success") window.location.href = "/list";
+            else history.back();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    </script>
+  </body>
+</html>
