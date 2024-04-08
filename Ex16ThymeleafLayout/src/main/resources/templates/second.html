@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html
+  lang="ko"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout}"
+>
+  <!-- head내용이 layout.html의 head에 추가된다. -->
+  <head>
+    <!-- second.html/head 시작 -->
+    <!-- second.html/head 타이틀 -->
+    <title>second.html의 타이틀</title>
+
+    <!-- second.html/head/css -->
+    <link rel="stylesheet" href="/css/second.css" />
+
+    <!-- second.html/head/js -->
+    <script></script>
+
+    <!-- second.html/head 끝 -->
+  </head>
+
+  <!-- second.html 고유 content -->
+  <div layout:fragment="content">
+    <!-- second.html UI 시작 -->
+    <h2>second.html 화면</h2>
+    <!-- second.html UI 끝 -->
+  </div>
+</html>
