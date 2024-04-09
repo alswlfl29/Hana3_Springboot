@@ -1,0 +1,99 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+pageEncoding="UTF-8"%> <%@ page trimDirectiveWhitespaces="true" %> <%@ taglib
+uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>회원가입 화면</title>
+    <script>
+      // input 태그에 required 넣으면 checkValue() 기능 동작함
+      // 유효성 검사
+      function checkValue() {
+        // empty, null, 길이 0 체크
+        if (!document.userInfo.userId.value) {
+          alert("아이디를 입력하세요.");
+          document.getElementById("userId").focus();
+          return false; // form 태그의 submit통신이 막힘.
+        }
+        if (!document.userInfo.userPw.value) {
+          alert("암호를 입력하세요.");
+          document.getElementById("userPw").focus();
+          return false; // form 태그의 submit통신이 막힘.
+        }
+        if (!document.userInfo.userRole.value) {
+          alert("권한을 입력하세요.");
+          document.getElementById("userRole").focus();
+          return false; // form 태그의 submit통신이 막힘.
+        }
+        return true; // form 태그의 submit통신이 이루어짐.
+      }
+    </script>
+  </head>
+  <body>
+    <h2>회원가입 화면</h2>
+    <!-- form 태그 안의 name은 JS에서 submit을 할 때 사용 -->
+    <!-- form 태그 안에 onsubmit을 작성해주면, button의 submit으로 
+        요청이 날아기기 전에 onsubmit에 있는 것부터 처리해줌 
+        => 보통, 프론트에서 유효성 검사를 할 때 사용(프론트에서 유효성 검사를 해주어 서버의 일을 줄임)-->
+    <form
+      action="/joinAction"
+      method="post"
+      name="userInfo"
+      onsubmit="return checkValue();"
+    >
+      <table border="1">
+        <tr>
+          <td>아이디</td>
+          <td>
+            <input type="text" name="userId" id="userId" maxlength="20" />
+          </td>
+        </tr>
+        <tr>
+          <td>비번</td>
+          <td>
+            <input type="password" name="userPw" id="userPw" maxlength="20" />
+          </td>
+        </tr>
+        <tr>
+          <td>이름</td>
+          <td>
+            <input type="text" name="userName" id="userName" maxlength="50" />
+          </td>
+        </tr>
+        <tr>
+          <td>가입일자</td>
+          <td>
+            <input type="date" name="joinDate" id="joinDate" />
+          </td>
+        </tr>
+        <tr>
+          <td>권한</td>
+          <td>
+            <label for="userRole">권한을 선택해주세요.</label>
+            <select id="userRole" name="userRole">
+              <option value="ROLE_USER" selected>일반회원</option>
+              <option value="ROLE_ADMIN">관리자</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>주소</td>
+          <td>
+            <input
+              type="text"
+              name="userAddress"
+              id="userAddress"
+              maxlength="100"
+            />
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" align="center">
+            <button type="submit">회원가입</button>
+          </td>
+        </tr>
+      </table>
+    </form>
+  </body>
+</html>
