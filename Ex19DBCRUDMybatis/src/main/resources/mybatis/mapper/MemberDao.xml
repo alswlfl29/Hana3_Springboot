@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- SQL 문 끝에 ; 세미콜론을 넣지 말자!! -->
+<!-- id는 함수이름 -->
+<!-- resultType: int => Integer(객체타입) -->
+<!-- resultType: _int => int(원시타입) -->
+<!-- insert에는 parameterType과 parameterMap 으로 나뉨 -->
+<mapper namespace="com.study.Ex14ReadDB.dao.IMemberDao">
+
+    <select id="list" resultType="com.study.Ex14ReadDB.dto.MemberDto">
+        SELECT * FROM member ORDER BY join_date DESC
+    </select>
+
+    <select id="count" resultType="_int">
+        SELECT COUNT(*) FROM member
+    </select>
+
+    <select id="findById" resultType="com.study.Ex14ReadDB.dto.MemberDto">
+        SELECT * FROM member WHERE id=#{param1}
+    </select>
+
+    <insert id="insert" parameterType="com.study.Ex14ReadDB.dto.MemberDto">
+        INSERT INTO member values (0, #{userId}, #{userPw}, #{userName}, #{userRole}, #{joinDate})
+    </insert>
+    <insert id="insertMap" parameterType="map">
+        INSERT INTO member values (0, #{userId}, #{userPw}, #{userName}, #{userRole}, #{joinDate})
+    </insert>
+
+    <update id="update" parameterType="com.study.Ex14ReadDB.dto.MemberDto">
+        UPDATE member SET user_id=#{userId}, user_pw=#{userPw}, user_name=#{userName}, user_role=#{userRole}, join_date=#{joinDate} WHERE id=#{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM member WHERE id=#{param1}
+    </delete>
+
+    <delete id="deleteMap" parameterType="map">
+        DELETE FROM member WHERE id=#{id} and user_id=#{userId}
+    </delete>
+</mapper>
