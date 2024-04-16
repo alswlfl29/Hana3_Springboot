@@ -1,0 +1,16 @@
+#logging:
+#  level:
+#    com:
+#      study:
+#        Ex21Logger: debug
+#
+#  pattern:
+#    file: "[%d{HH:mm:ss.SSS}][%-5level][%logger.%method:line%line] - %msg%n"
+#    level: info
+#
+#  file:
+#    name: logs/mylog.log
+#
+#  logback:
+#    max-history: 30
+#    file-name-pattern: "logs/mylog.%d{yyyy-MM-dd}.%i"
