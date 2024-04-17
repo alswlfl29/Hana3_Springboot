@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  <!-- 탑메뉴 -->
+  <div class="toTopScroll">
+    <img src="./img/icon-top.png" onClick="javascript:window.scrollTo(0,0)" />
+  </div>
+  <div class="top d-none d-md-block">
+    <div class="topMenu d-none d-md-block container">
+      <span class="home"><a href="/">HOME</a></span>
+      <span th:if="${isLogin=='ok'}">
+        <a href="/member/logoutAction">LOGOUT</a>
+      </span>
+      <span th:if="${isLogin=='fail'}"><a href="/member/login">LOGIN</a></span>
+      <span><a href="/member/join">JOIN</a></span>
+      <span><a href="/company/company03">CONTACT US</a></span>
+    </div>
+  </div>
+</html>
