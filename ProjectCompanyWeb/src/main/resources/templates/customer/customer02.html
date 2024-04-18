@@ -104,35 +104,11 @@
           <th>작성자</th>
           <th>작성일</th>
         </tr>
-        <tr onclick="openWindow(5)">
-          <td>5</td>
-          <td><img src="../img/customer/icon_sct.gif">문의사항에 대해 자세한 답변 부탁합니다.</td>
-          <td>hong</td>
-          <td>2019-06-19</td>
-        </tr>
-        <tr onclick="openWindow(4)">
-          <td>4</td>
-          <td><img src="../img/customer/icon_sct.gif">문의사항에 대해 자세한 답변 부탁합니다.</td>
-          <td>hong</td>
-          <td>2019-06-19</td>
-        </tr>
-        <tr onclick="openWindow(3)">
-          <td>3</td>
-          <td><img src="../img/customer/icon_sct.gif">문의사항에 대해 자세한 답변 부탁합니다.</td>
-          <td>hong</td>
-          <td>2019-06-19</td>
-        </tr>
-        <tr onclick="openWindow(2)">
-          <td>2</td>
-          <td><img src="../img/customer/icon_sct.gif">문의사항에 대해 자세한 답변 부탁합니다.</td>
-          <td>hong</td>
-          <td>2019-06-19</td>
-        </tr>
-        <tr onclick="openWindow(1)">
-          <td>1</td>
-          <td><img src="../img/customer/icon_sct.gif">문의사항에 대해 자세한 답변 부탁합니다.</td>
-          <td>hong</td>
-          <td>2019-06-19</td>
+        <tr th:each="qna, status:${list}" th:onclick="|openWindow(${qna.qnaIdx})|">
+          <td th:text="${status.count}">5</td>
+          <td th:text="${qna.qnaTitle}"><img src="../img/customer/icon_sct.gif">문의사항에 대해 자세한 답변 부탁합니다.</td>
+          <td th:text="${qna.qnaName}">hong</td>
+          <td th:text="${qna.qnaDate}">2019-06-19</td>
         </tr>
       </table>
     </div>
@@ -141,26 +117,31 @@
   <!-- search bar -->
   <div class="search container">
     <div>
-      <img onclick="window.location.href='customer02_2.html'" 
+      <img onclick="window.location.href='/customer/customer02_2'" 
       src="../img/customer/write.gif">
     </div>
-    <table>
-      <tr>
-        <td>
-          <select name="내용" id="">
-            <option value="">제목</option>
-            <option value="">내용</option>
-            <option value="">작성자</option>
-          </select>
-        </td>
-        <td>
-          <input type="text">
-        </td>
-        <td>
-          <input type="image" src="../img/customer/search.gif">
-        </td>
-      </tr>
-    </table>
+    <form
+    action="/customer/search"
+    method="post"
+    >
+      <table>
+        <tr>
+          <td>
+            <select name="searchKeyword" id="">
+              <option value="title">제목</option>
+              <option value="content">내용</option>
+              <option value="member">작성자</option>
+            </select>
+          </td>
+          <td>
+            <input type="text" id="searchContent" name="searchContent" required />
+          </td>
+          <td>
+            <input type="image" src="../img/customer/search.gif">
+          </td>
+        </tr>
+      </table>
+    </form>
   </div>
 
   <!-- 푸터 -->
@@ -168,7 +149,7 @@
 
   <script>
     function openWindow( no ){
-      window.open('customer02_3.html?no='+no, '비밀번호확인', 'width=430,height=300,location=no,status=no,scrollbars=no')
+      window.open('/customer/customer02_3?qna_idx='+no, '비밀번호확인', 'width=430,height=300,location=no,status=no,scrollbars=no')
     }
   </script>
 </body>

@@ -82,7 +82,7 @@ public class MemberController {
 
     @GetMapping("/idFind")
     public String idFind(){
-        return "/member/idFind2";
+        return "/member/idFind";
     }
 
     @PostMapping("/idFindAction")
@@ -102,7 +102,7 @@ public class MemberController {
 
     @GetMapping("/passwordFind")
     public String passwordFind(){
-        return "/member/passwordFind2";
+        return "/member/passwordFind";
     }
 
     @PostMapping("/passwordFindAction")
