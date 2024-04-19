@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
   <head>
     <title>회사홈페이지</title>
     <meta charset="utf-8" />
@@ -62,95 +62,99 @@
       <!-- 사이드메뉴 -->
       <div id="adminSide">
         <ul>
-          <li><a href="/admin/admin_member">회원 관리</a></li>
           <li>
-            <a href="/admin/admin_notice" class="adminSideActive"
-              >공지사항 관리</a
-            >
+            <a href="/admin/admin_search_member?search_select=&search_keyword=">회원 관리</a>
           </li>
+          <li><a href="/admin/admin_search_community?search_select=&search_keyword="  class="adminSideActive">공지사항 관리</a></li>
         </ul>
       </div>
       <!-- 메인 -->
       <div id="adminSection">
-        <div class="adminDiv">
-          <h3>공지사항 관리</h3>
-        </div>
-        <div class="adminDiv">
-          검색 옵션
-          <select name="search_select" id="search_select">
-            <option value="all" selected>전체</option>
-            <option value="title">제목</option>
-            <option value="content">내용</option>
-            <option value="id">작성자아이디</option>
-          </select>
-          <input
-            type="text"
-            name="search_keyword"
-            id="search_keyword"
-            value=""
-          />
-          <input type="image" src="../img/community/search.gif" />
-        </div>
-        <div class="adminDiv">
-          정렬
-          <select class="size" name="order_select" id="order_select">
-            <option value="id_asc" selected>아이디 오름차순</option>
-            <option value="id_desc">아이디 내림차순</option>
-            <option value="reg_date_asc">등록일 오름차순</option>
-            <option value="reg_date_desc">등록일 내림차순</option>
-          </select>
-        </div>
-        <div class="adminDiv2" id="tableTitle">
-          <div>목록 10건</div>
-          <div>
-            한페이지 행수
-            <select class="size" name="page_select" id="page_select">
-              <option value="page10" selected>5개만 보기</option>
-              <option value="page10">10개만 보기</option>
+        <form action="/admin/admin_community_list_change" method="post" name="changeCommunityList" onsubmit="return false">
+          <div class="adminDiv">
+            <h3>공지사항 관리</h3>
+          </div>
+          <div class="adminDiv">
+            검색 옵션
+            <select name="search_select" id="search_select" th:value="${search_select}">
+              <option value="all" th:selected="${search_select}=='all'">전체</option>
+              <option value="title" th:selected="${search_select}=='title'">제목</option>
+              <option value="content" th:selected="${search_select}=='content'">내용</option>
+              <option value="id" th:selected="${search_select}=='id'">작성자아이디</option>
+            </select>
+            <input
+              type="text"
+              name="search_keyword"
+              id="search_keyword"
+              th:value="${search_keyword}"
+            />
+            <button type="button" onclick="searchCommunity();" style="border: 0;background-color: transparent;">
+              <img src="../img/community/search.gif" alt="검색" />
+            </button>
+          </div>
+          <div class="adminDiv">
+            정렬
+            <select class="size" name="order_select" id="order_select" th:value="${order_select}" onchange="submit();">
+              <option value="noticeMemberId_ASC" th:selected="${order_select}=='noticeMemberId_ASC'">아이디 오름차순</option>
+              <option value="noticeMemberId_DESC" th:selected="${order_select}=='noticeMemberId_DESC'">아이디 내림차순</option>
+              <option value="noticeDate_ASC" th:selected="${order_select}=='noticeDate_ASC'">등록일 오름차순</option>
+              <option value="noticeDate_DESC" th:selected="${order_select}=='noticeDate_DESC'">등록일 내림차순</option>
             </select>
           </div>
-        </div>
-        <div class="">
-          <table class="adminTable">
-            <thead>
-              <tr>
-                <th>글번호</th>
-                <th>제목</th>
-                <th>글쓴이</th>
-                <th>작성일</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                onclick="location.href='/admin/admin_notice_view?notice_idx=5';"
-                style="cursor: pointer"
-              >
-                <td>1</td>
-                <td>타이틀1</td>
-                <td>admin</td>
-                <td>2024-04-09</td>
-              </tr>
-              <tr
-                onclick="location.href='/admin/admin_notice_view?notice_idx=4';"
-                style="cursor: pointer"
-              >
-                <td>2</td>
-                <td>타이틀1</td>
-                <td>admin</td>
-                <td>2024-04-08</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+          <div class="adminDiv2" id="tableTitle">
+            <div th:text="|목록 ${communitySize}건|">목록 10건</div>
+            <div>
+              한페이지 행수
+              <select class="size" name="page_select" id="page_select" th:value="${page_select}" onchange="submit();">
+                <option value="all" th:selected="${page_select}=='all'">전체 보기</option>
+                <option value="5" th:selected="${page_select}=='5'">5개만 보기</option>
+                <option value="10" th:selected="${page_select}=='10'">10개만 보기</option>
+              </select>
+            </div>
+          </div>
+          <div class="">
+            <table class="adminTable">
+              <thead>
+                <tr>
+                  <th>글번호</th>
+                  <th>제목</th>
+                  <th>글쓴이</th>
+                  <th>작성일</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  th:each="community, status: ${communityList}"
+                  th:onclick="|location.href='@{/admin/admin_notice_view(notice_idx=${community.noticeIdx}, notice_count=${status.count})}'|"
+                  style="cursor: pointer"
+                >
+                  <td th:text="${status.count}">1</td>
+                  <td th:text="${community.noticeTitle}">타이틀1</td>
+                  <td th:text="${community.noticeMemberId}">admin</td>
+                  <td th:text="${community.noticeDate}">2024-04-09</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
-        <div class="pageNav adminDiv2">
-          <div><a href="/admin/admin_notice_write">공지글 쓰기</a></div>
-        </div>
+          <div class="pageNav adminDiv2">
+            <div><a href="/admin/admin_notice_write">공지글 쓰기</a></div>
+          </div>
+        </form>
       </div>
     </div>
 
     <!-- 푸터 -->
     <div th:replace="/fragments/footer.html :: fragment-footer"></div>
+
+    <script>
+      function searchCommunity(){
+        let searchSelect = document.getElementById("search_select").value;
+        let searchKeyword = document.getElementById("search_keyword").value;
+        window.location.href=`/admin/admin_search_community?search_select=${searchSelect}&search_keyword=${searchKeyword}`;
+      }
+
+    </script>
 
     <script>
       // back to top 기능

@@ -6,10 +6,8 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -20,32 +18,30 @@ public class CommunityController {
     private final CommunityService communityService;
 
     @GetMapping("/community01")
-    public String community01(HttpSession session, Model model){
+    public String community01(HttpSession session, @ModelAttribute("communities") List<CommunityResponseDto> communities,
+                              @ModelAttribute("search_select") String search_select, @ModelAttribute("search_keyword") String search_keyword, Model model){
         if(session.getAttribute("userId")!=null){
             model.addAttribute("isLogin","ok");
         }else{
             model.addAttribute("isLogin","fail");
         }
-        List<CommunityResponseDto> list = communityService.getCommunityList();
-        model.addAttribute("list",list);
+        model.addAttribute("list", communities);
+        model.addAttribute("search_select", search_select);
+        model.addAttribute("search_keyword", search_keyword);
         return "/community/community01";
     }
 
-    @PostMapping("/search")
-    public String search(@RequestParam String searchKeyword, @RequestParam String searchContent, HttpSession session, Model model){
-        if(session.getAttribute("userId")!=null){
-            model.addAttribute("isLogin","ok");
-        }else{
-            model.addAttribute("isLogin","fail");
-        }
-
+    @GetMapping("/search")
+    public String search(@RequestParam String searchKeyword, @RequestParam String searchContent, RedirectAttributes redirectAttributes){
         List<CommunityResponseDto> list = switch (searchKeyword) {
-            case "title" -> communityService.getCommunityTitle(searchContent);
-            case "content" -> communityService.getCommunityContent(searchContent);
-            default -> communityService.getCommunityList();
+            case "title" -> communityService.findAllCommunityByNoticeTitle(searchContent);
+            case "content" -> communityService.findAllCommunityByNoticeContent(searchContent);
+            default -> communityService.findAllCommunity();
         };
-        model.addAttribute("list",list);
-        return "/community/community01";
+        redirectAttributes.addFlashAttribute("communities",list);
+        redirectAttributes.addFlashAttribute("search_select",searchKeyword);
+        redirectAttributes.addFlashAttribute("search_keyword",searchContent);
+        return "redirect:/community/community01";
     }
 
     @GetMapping("community01_1")

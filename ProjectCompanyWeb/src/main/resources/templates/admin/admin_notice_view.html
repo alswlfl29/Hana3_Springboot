@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
   <head>
     <title>회사홈페이지</title>
     <meta charset="utf-8" />
@@ -28,6 +28,17 @@
       integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
       crossorigin="anonymous"
     ></script>
+
+    <script>
+      function checkValue() {
+        if (CKEDITOR.instances.editor4.getData()==''
+        ||CKEDITOR.instances.editor4.getData().length==0) {
+          alert("공지사항 내용을 작성해주세요!");
+          return false;
+        }
+        return true;
+      }
+    </script>
   </head>
 
   <body>
@@ -62,43 +73,44 @@
       <!-- 사이드메뉴 -->
       <div id="adminSide">
         <ul>
-          <li><a href="/admin/admin_member">회원 관리</a></li>
           <li>
-            <a href="/admin/admin_notice" class="adminSideActive"
-              >공지사항 관리</a
-            >
+            <a href="/admin/admin_search_member?search_select=&search_keyword=">회원 관리</a>
           </li>
+          <li><a href="/admin/admin_search_community?search_select=&search_keyword="  class="adminSideActive">공지사항 관리</a></li>
         </ul>
       </div>
       <!-- 메인 -->
-      <div id="adminSection">
-        <div class="adminDiv">
-          <h3>공지사항 관리</h3>
-        </div>
-        <div class="noticeViewTitle adminDiv2">
-          <span>[일반]타이틀1</span>
-          <span>
-            <span>글쓴이:admin</span>
-            <span>글번호:5</span>
-          </span>
-        </div>
-        <div class="adminDiv2">
-          <div class="noticeViewContent">
-            <textarea rows="5" cols="50" id="editor4" name="editor4">
-						내용입니다.1</textarea
-            >
+        <div id="adminSection">
+          <div class="adminDiv">
+            <h3>공지사항 관리</h3>
           </div>
-        </div>
-        <div class="noticeViewBtns adminDiv2">
-          <div>
-            <a href="/admin/admin_notice_modify?notice_idx=1">수정</a>
-            <a href="/admin/admin_notice_delete?notice_idx=1">삭제</a>
+          <div class="noticeViewTitle adminDiv2">
+            <span th:text="|[일반] ${community.noticeTitle}|">[일반]타이틀1</span>
+            <span>
+              <span th:text="|글쓴이: ${community.noticeMemberId}|">글쓴이:admin</span>
+              <span th:text="|글번호: ${notice_count}|">글번호:5</span>
+            </span>
           </div>
-          <div>
-            <a href="/admin/admin_notice">목록</a>
-          </div>
+          <form th:action="@{/admin/admin_notice_modify(notice_idx=${community.noticeIdx})}" method="post" name="noticeInfo" onsubmit="return checkValue();">
+            <div class="adminDiv2">
+              <div class="noticeViewContent">
+                <textarea rows="5" cols="50" id="editor4" name="editor4" th:text="${community.noticeContent}" required>
+                내용입니다.1</textarea
+                >
+              </div>
+            </div>
+            <div class="noticeViewBtns adminDiv2">
+              <div>
+                <button type="submit" style="border: none; background-color: transparent;">수정</button>
+                <a style="color: black; text-decoration: none;">삭제</a>
+                <!-- <a style="color: black; text-decoration: none;" th:href="|/admin/admin_notice_delete?notice_idx=${community.noticeIdx}|">삭제</a> -->
+              </div>
+              <div>
+                <a style="color: black; text-decoration: none;" href="/admin/admin_notice">목록</a>
+              </div>
+            </div>
+          </form>
         </div>
-      </div>
     </div>
 
     <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>

@@ -34,4 +34,9 @@ public class Community {
         this.noticeMemberId = noticeMemberId;
         this.noticeDate = LocalDate.now();
     }
+
+    public void update(String noticeContent){
+        this.noticeContent = noticeContent;
+        this.noticeDate = LocalDate.now();
+    }
 }

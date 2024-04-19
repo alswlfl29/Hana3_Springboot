@@ -115,19 +115,19 @@
   <div class="search container">
     <form
     action="/community/search"
-    method="post"
+    method="get"
     >
       <table>
         <tr>
           <td>
-            <select name="searchKeyword" id="">
-              <option value="title">제목</option>
-              <option value="content">내용</option>
-              <option value="member">작성자</option>
+            <select name="searchKeyword" id="" th:value="${search_select}">
+              <option value="title" th:selected="${search_select}=='title'">제목</option>
+              <option value="content" th:selected="${search_select}=='content'">내용</option>
+              <!-- <option value="member" th:selected="${search_select}=='member'">작성자</option> -->
             </select>
           </td>
           <td>
-            <input type="text" name="searchContent" required />
+            <input type="text" name="searchContent" th:value="${search_keyword}" />
           </td>
           <td>
             <input type="image" src="../img/community/search.gif">

@@ -17,22 +17,24 @@ public class CommunityService {
     private final CommunityRepository communityRepository;
 
     @Transactional(readOnly = true)
-    public List<CommunityResponseDto> getCommunityList(){
-        Sort sort = Sort.by(Sort.Direction.DESC, "noticeDate","noticeIdx");
-        List<Community> list = communityRepository.findAll(sort);
-        return list.stream().map(CommunityResponseDto::new).collect(Collectors.toList());
+    public List<CommunityResponseDto> findAllCommunity(){
+        Sort sort = Sort.by(Sort.Direction.DESC, "noticeDate");
+        List<Community> members = communityRepository.findAll(sort);
+        return members.stream().map(CommunityResponseDto::new).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<CommunityResponseDto> getCommunityTitle(String title){
-        List<Community> list = communityRepository.findByNoticeTitle(title);
-        return list.stream().map(CommunityResponseDto::new).collect(Collectors.toList());
+    public List<CommunityResponseDto> findAllCommunityByNoticeTitle(String search_keyword){
+        Sort sort = Sort.by(Sort.Direction.DESC, "noticeDate");
+        List<Community> communities = communityRepository.findAllCommunityByNoticeTitle(search_keyword, sort);
+        return communities.stream().map(CommunityResponseDto::new).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<CommunityResponseDto> getCommunityContent(String content){
-        List<Community> list = communityRepository.findByNoticeContent(content);
-        return list.stream().map(CommunityResponseDto::new).collect(Collectors.toList());
+    public List<CommunityResponseDto> findAllCommunityByNoticeContent(String search_keyword){
+        Sort sort = Sort.by(Sort.Direction.DESC, "noticeDate");
+        List<Community> communities = communityRepository.findAllCommunityByNoticeContent(search_keyword, sort);
+        return communities.stream().map(CommunityResponseDto::new).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

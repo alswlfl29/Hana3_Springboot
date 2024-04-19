@@ -1,5 +1,7 @@
 package com.study.ProjectCompanyWeb.customer.service;
 
+import com.study.ProjectCompanyWeb.community.domain.Community;
+import com.study.ProjectCompanyWeb.community.dto.CommunityResponseDto;
 import com.study.ProjectCompanyWeb.customer.domain.QnA;
 import com.study.ProjectCompanyWeb.customer.domain.QnARepository;
 import com.study.ProjectCompanyWeb.customer.dto.QnAResponseDto;
@@ -17,28 +19,31 @@ public class QnAService {
     private final QnARepository qnARepository;
 
     @Transactional(readOnly = true)
-    public List<QnAResponseDto> getQnAList(){
-        Sort sort = Sort.by(Sort.Direction.DESC, "qnaDate","qnaIdx");
-        List<QnA> list = qnARepository.findAll(sort);
-        return list.stream().map(QnAResponseDto::new).collect(Collectors.toList());
+    public List<QnAResponseDto> findAllQnA(){
+        Sort sort = Sort.by(Sort.Direction.DESC, "qnaDate");
+        List<QnA> qnaList = qnARepository.findAll(sort);
+        return qnaList.stream().map(QnAResponseDto::new).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<QnAResponseDto> getQnATitle(String title){
-        List<QnA> list = qnARepository.findByQnaTitle(title);
-        return list.stream().map(QnAResponseDto::new).collect(Collectors.toList());
+    public List<QnAResponseDto> findAllQnAByQnATitle(String search_keyword){
+        Sort sort = Sort.by(Sort.Direction.DESC, "qnaDate");
+        List<QnA> qnaList = qnARepository.findAllQnAByQnATitle(search_keyword, sort);
+        return qnaList.stream().map(QnAResponseDto::new).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<QnAResponseDto> getQnAContent(String content){
-        List<QnA> list = qnARepository.findByQnaContent(content);
-        return list.stream().map(QnAResponseDto::new).collect(Collectors.toList());
+    public List<QnAResponseDto> findAllQnAByQnAContent(String search_keyword){
+        Sort sort = Sort.by(Sort.Direction.DESC, "qnaDate");
+        List<QnA> qnaList = qnARepository.findAllQnAByQnAContent(search_keyword, sort);
+        return qnaList.stream().map(QnAResponseDto::new).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<QnAResponseDto> getQnAMember(String name){
-        List<QnA> list = qnARepository.findByQnaName(name);
-        return list.stream().map(QnAResponseDto::new).collect(Collectors.toList());
+    public List<QnAResponseDto> findAllQnAByQnAName(String search_keyword){
+        Sort sort = Sort.by(Sort.Direction.DESC, "qnaDate");
+        List<QnA> qnaList = qnARepository.findAllQnAByQnAName(search_keyword, sort);
+        return qnaList.stream().map(QnAResponseDto::new).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

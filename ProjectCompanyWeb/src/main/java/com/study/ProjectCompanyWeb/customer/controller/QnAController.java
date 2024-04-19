@@ -1,5 +1,6 @@
 package com.study.ProjectCompanyWeb.customer.controller;
 
+import com.study.ProjectCompanyWeb.community.dto.CommunityResponseDto;
 import com.study.ProjectCompanyWeb.customer.dto.QnACheckPwRequestDto;
 import com.study.ProjectCompanyWeb.customer.dto.QnAResponseDto;
 import com.study.ProjectCompanyWeb.customer.service.QnAService;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -18,33 +20,31 @@ public class QnAController {
     private final QnAService qnAService;
 
     @GetMapping("/customer02")
-    public String customer02(HttpSession session, Model model){
+    public String customer02(HttpSession session, @ModelAttribute("qnaList") List<QnAResponseDto> qnaList,
+                             @ModelAttribute("search_select") String search_select, @ModelAttribute("search_keyword") String search_keyword, Model model){
         if(session.getAttribute("userId")!=null){
-            List<QnAResponseDto> list = qnAService.getQnAList();
-            model.addAttribute("list",list);
+            model.addAttribute("list", qnaList);
             model.addAttribute("isLogin","ok");
+            model.addAttribute("search_select", search_select);
+            model.addAttribute("search_keyword", search_keyword);
             return "/customer/customer02";
         }else{
             return "/customer/requireLogin";
         }
     }
 
-    @PostMapping("/search")
-    public String search(@RequestParam String searchKeyword, @RequestParam String searchContent, HttpSession session, Model model){
-        if(session.getAttribute("userId")!=null){
-            model.addAttribute("isLogin","ok");
-        }else{
-            model.addAttribute("isLogin","fail");
-        }
-
+    @GetMapping("/search")
+    public String search(@RequestParam String searchKeyword, @RequestParam String searchContent, RedirectAttributes redirectAttributes){
         List<QnAResponseDto> list = switch (searchKeyword) {
-            case "title" -> qnAService.getQnATitle(searchContent);
-            case "content" -> qnAService.getQnAContent(searchContent);
-            case "member" -> qnAService.getQnAMember(searchContent);
-            default -> qnAService.getQnAList();
+            case "title" -> qnAService.findAllQnAByQnATitle(searchContent);
+            case "content" -> qnAService.findAllQnAByQnAContent(searchContent);
+            case "member" -> qnAService.findAllQnAByQnAName(searchContent);
+            default -> qnAService.findAllQnA();
         };
-        model.addAttribute("list",list);
-        return "/customer/customer02";
+        redirectAttributes.addFlashAttribute("qnaList",list);
+        redirectAttributes.addFlashAttribute("search_select",searchKeyword);
+        redirectAttributes.addFlashAttribute("search_keyword",searchContent);
+        return "redirect:/customer/customer02";
     }
 
     @GetMapping("/customer02_2")

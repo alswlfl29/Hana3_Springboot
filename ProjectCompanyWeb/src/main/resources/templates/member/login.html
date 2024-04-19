@@ -37,6 +37,22 @@
         $("#footer").load("../footer-sub.html");
       });
     </script>
+
+<script>
+  function checkValue() {
+    if(!document.memberLogin.loginID.value){
+      alert("아이디를 입력해주세요.");
+      document.getElementById("loginID").focus();
+      return false;
+    }
+    if(!document.memberLogin.loginPW.value){
+      alert("비밀번호를 입력해주세요.");
+      document.getElementById("loginPW").focus();
+      return false;
+    }
+    return true;
+  }
+</script>
   </head>
   <body>
     <!-- 헤더 -->
@@ -69,7 +85,7 @@
         <div><p>The design and maintenance are excellent.</p></div>
       </div>
       <div class="loginMain">
-        <form action="/member/loginAction" method="post" name="memberLogin">
+        <form action="/member/loginAction" method="post" name="memberLogin" onsubmit="return checkValue();">
           <table class="main1">
             <tr>
               <td>
@@ -77,8 +93,8 @@
                 비밀번호
               </td>
               <td>
-                <input type="text" name="loginID" value="" required /> <br />
-                <input type="password" name="loginPW" value="" required />
+                <input type="text" id="loginID" name="loginID" value="" /> <br />
+                <input type="password" id="loginPW" name="loginPW" value="" />
               </td>
               <td>
                 <input

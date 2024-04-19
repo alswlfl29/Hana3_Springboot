@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
   <head>
     <title>회사홈페이지</title>
     <meta charset="utf-8" />
@@ -27,6 +27,17 @@
       integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
       crossorigin="anonymous"
     ></script>
+
+    <script>
+      function checkValue() {
+        if (CKEDITOR.instances.editor4.getData()==''
+        ||CKEDITOR.instances.editor4.getData().length==0) {
+          alert("공지사항 내용을 작성해주세요!");
+          return false;
+        }
+        return true;
+      }
+    </script>
   </head>
 
   <body>
@@ -61,12 +72,10 @@
       <!-- 사이드메뉴 -->
       <div id="adminSide">
         <ul>
-          <li><a href="/admin/admin_member">회원 관리</a></li>
           <li>
-            <a href="/admin/admin_notice" class="adminSideActive"
-              >공지사항 관리</a
-            >
+            <a href="/admin/admin_search_member?search_select=&search_keyword=">회원 관리</a>
           </li>
+          <li><a href="/admin/admin_search_community?search_select=&search_keyword="  class="adminSideActive">공지사항 관리</a></li>
         </ul>
       </div>
       <!-- 메인 -->
@@ -74,23 +83,23 @@
         <div class="adminDiv">
           <h3>공지사항 관리</h3>
         </div>
-        <div class="noticeWriteTitle adminDiv2">
-          <!-- <select name="type_select" id="type_select">
-          <option value="normal" selected>일반공지</option>
-          <option value="important">중요공지</option>
-        </select> -->
-          <label style="width: 100px">타이틀</label>
-          <input type="text" name="noticeTitle" id="noticeTitle" value="" />
-        </div>
-        <div class="adminDiv2">
-          <textarea rows="5" cols="50" id="editor4" name="editor4">
-1234</textarea
-          >
-        </div>
-        <div class="noticeWriteBtns adminDiv2">
-          <input type="submit" value="등록" />
-          <input type="button" onclick="history.back()" value="취소" />
-        </div>
+        <form action="/admin/admin_notice_write" method="post" name="noticeInfo" onsubmit="return checkValue();">
+          <div class="noticeWriteTitle adminDiv2">
+            <!-- <select name="type_select" id="type_select">
+            <option value="normal" selected>일반공지</option>
+            <option value="important">중요공지</option>
+          </select> -->
+            <label style="width: 100px">타이틀</label>
+            <input type="text" name="noticeTitle" id="noticeTitle" value="" required />
+          </div>
+          <div class="adminDiv2">
+            <textarea rows="5" cols="50" id="editor4" name="editor4" required></textarea>
+          </div>
+          <div class="noticeWriteBtns adminDiv2">
+            <input type="submit" value="등록" />
+            <input type="button" onclick="history.back()" value="취소" />
+          </div>
+        </form>
       </div>
     </div>
 
