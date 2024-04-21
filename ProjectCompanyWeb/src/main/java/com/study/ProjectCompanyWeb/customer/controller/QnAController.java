@@ -11,6 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Controller
@@ -20,8 +22,27 @@ public class QnAController {
     private final QnAService qnAService;
 
     @GetMapping("/customer02")
-    public String customer02(HttpSession session, @ModelAttribute("qnaList") List<QnAResponseDto> qnaList,
-                             @ModelAttribute("search_select") String search_select, @ModelAttribute("search_keyword") String search_keyword, Model model){
+    public String customer02(HttpSession session, Model model){
+        if(session.getAttribute("userId")!=null){
+            model.addAttribute("isLogin","ok");
+            List<QnAResponseDto> qnaList = qnAService.findAllQnA();
+            model.addAttribute("list", qnaList);
+            return "/customer/customer02";
+        }else{
+            return "/customer/requireLogin";
+        }
+    }
+
+    @GetMapping(value = "/customer02", params = { "search_select", "search_keyword"})
+    public String customer02Search(HttpSession session,
+                             @RequestParam("search_select") String search_select, @RequestParam("search_keyword") String search_keyword, Model model){
+        List<QnAResponseDto> qnaList = (List<QnAResponseDto>) model.getAttribute("qnaList");
+        if (qnaList == null || qnaList.isEmpty()) {
+            search_select = URLEncoder.encode(search_select, StandardCharsets.UTF_8);
+            search_keyword = URLEncoder.encode(search_keyword, StandardCharsets.UTF_8);
+            return "redirect:/customer/search?searchKeyword=" + search_select + "&searchContent=" + search_keyword;
+        }
+
         if(session.getAttribute("userId")!=null){
             model.addAttribute("list", qnaList);
             model.addAttribute("isLogin","ok");
@@ -42,8 +63,8 @@ public class QnAController {
             default -> qnAService.findAllQnA();
         };
         redirectAttributes.addFlashAttribute("qnaList",list);
-        redirectAttributes.addFlashAttribute("search_select",searchKeyword);
-        redirectAttributes.addFlashAttribute("search_keyword",searchContent);
+        redirectAttributes.addAttribute("search_select",searchKeyword);
+        redirectAttributes.addAttribute("search_keyword",searchContent);
         return "redirect:/customer/customer02";
     }
 

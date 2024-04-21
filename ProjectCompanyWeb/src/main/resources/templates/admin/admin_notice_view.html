@@ -74,9 +74,9 @@
       <div id="adminSide">
         <ul>
           <li>
-            <a href="/admin/admin_search_member?search_select=&search_keyword=">회원 관리</a>
+            <a href="/admin/admin_member">회원 관리</a>
           </li>
-          <li><a href="/admin/admin_search_community?search_select=&search_keyword="  class="adminSideActive">공지사항 관리</a></li>
+          <li><a href="/admin/admin_notice"  class="adminSideActive">공지사항 관리</a></li>
         </ul>
       </div>
       <!-- 메인 -->
@@ -91,7 +91,7 @@
               <span th:text="|글번호: ${notice_count}|">글번호:5</span>
             </span>
           </div>
-          <form th:action="@{/admin/admin_notice_modify(notice_idx=${community.noticeIdx})}" method="post" name="noticeInfo" onsubmit="return checkValue();">
+          <form th:action="@{/admin/admin_notice_modify(notice_idx=${community.noticeIdx}, notice_count=${notice_count})}" method="post" name="noticeInfo" onsubmit="return checkValue();">
             <div class="adminDiv2">
               <div class="noticeViewContent">
                 <textarea rows="5" cols="50" id="editor4" name="editor4" th:text="${community.noticeContent}" required>

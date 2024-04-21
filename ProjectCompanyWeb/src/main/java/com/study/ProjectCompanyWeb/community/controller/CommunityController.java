@@ -9,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Controller
@@ -18,13 +20,33 @@ public class CommunityController {
     private final CommunityService communityService;
 
     @GetMapping("/community01")
-    public String community01(HttpSession session, @ModelAttribute("communities") List<CommunityResponseDto> communities,
-                              @ModelAttribute("search_select") String search_select, @ModelAttribute("search_keyword") String search_keyword, Model model){
+    public String community01(HttpSession session, Model model){
         if(session.getAttribute("userId")!=null){
             model.addAttribute("isLogin","ok");
         }else{
             model.addAttribute("isLogin","fail");
         }
+        List<CommunityResponseDto> communities = communityService.findAllCommunity();
+        model.addAttribute("list", communities);
+        return "/community/community01";
+    }
+
+    @GetMapping(value = "/community01", params = {"search_select", "search_keyword"})
+    public String community01(HttpSession session,
+                              @RequestParam("search_select") String search_select, @RequestParam("search_keyword") String search_keyword, Model model){
+        if(session.getAttribute("userId")!=null){
+            model.addAttribute("isLogin","ok");
+        }else{
+            model.addAttribute("isLogin","fail");
+        }
+
+        List<CommunityResponseDto> communities = (List<CommunityResponseDto>) model.getAttribute("communities");
+        if (communities == null || communities.isEmpty()) {
+            search_select = URLEncoder.encode(search_select, StandardCharsets.UTF_8);
+            search_keyword = URLEncoder.encode(search_keyword, StandardCharsets.UTF_8);
+            return "redirect:/community/search?searchKeyword=" + search_select + "&searchContent=" + search_keyword;
+        }
+
         model.addAttribute("list", communities);
         model.addAttribute("search_select", search_select);
         model.addAttribute("search_keyword", search_keyword);
@@ -38,9 +60,9 @@ public class CommunityController {
             case "content" -> communityService.findAllCommunityByNoticeContent(searchContent);
             default -> communityService.findAllCommunity();
         };
+        redirectAttributes.addAttribute("search_select",searchKeyword);
+        redirectAttributes.addAttribute("search_keyword",searchContent);
         redirectAttributes.addFlashAttribute("communities",list);
-        redirectAttributes.addFlashAttribute("search_select",searchKeyword);
-        redirectAttributes.addFlashAttribute("search_keyword",searchContent);
         return "redirect:/community/community01";
     }
 
@@ -51,7 +73,6 @@ public class CommunityController {
         }else{
             model.addAttribute("isLogin","fail");
         }
-
         try {
             CommunityResponseDto community = communityService.getCommunityItem(notice_idx);
             model.addAttribute("community",community);
