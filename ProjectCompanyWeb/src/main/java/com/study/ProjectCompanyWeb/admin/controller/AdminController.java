@@ -3,7 +3,7 @@ package com.study.ProjectCompanyWeb.admin.controller;
 import com.study.ProjectCompanyWeb.admin.dto.CommunitySaveRequestDto;
 import com.study.ProjectCompanyWeb.admin.dto.CommunityUpdateRequestDto;
 import com.study.ProjectCompanyWeb.admin.dto.MemberResponseDto;
-import com.study.ProjectCompanyWeb.admin.dto.MemberSearchRequestDto;
+import com.study.ProjectCompanyWeb.admin.dto.SearchRequestDto;
 import com.study.ProjectCompanyWeb.admin.service.AdminService;
 import com.study.ProjectCompanyWeb.community.domain.Community;
 import com.study.ProjectCompanyWeb.community.dto.CommunityResponseDto;
@@ -15,7 +15,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -77,20 +76,21 @@ public class AdminController {
     @GetMapping(value = "/admin_member", params = {"search_select", "search_keyword"})
     public String admin_member_search(HttpSession session,
                                @RequestParam("search_select") String search_select, @RequestParam("search_keyword") String search_keyword,
-                               @ModelAttribute("order_select") String order_select, @ModelAttribute("page_select") String page_select, Model model)
-                                throws IllegalStateException{
+                               @RequestParam("order_select") String order_select,
+                                      @RequestParam("page_select") String page_select, Model model) {
         if(session.getAttribute("adminId")!=null){
             model.addAttribute("isLogin","ok");
         }else{
             model.addAttribute("isLogin","fail");
             return "redirect:/admin/admin_login";
         }
-
         List<MemberResponseDto> members = (List<MemberResponseDto>) model.getAttribute("members");
-        if (members == null || members.isEmpty()) {
+
+        if (members == null) {
             search_select = URLEncoder.encode(search_select, StandardCharsets.UTF_8);
             search_keyword = URLEncoder.encode(search_keyword, StandardCharsets.UTF_8);
-            return "redirect:/admin/admin_search_member?search_select=" + search_select + "&search_keyword=" + search_keyword;
+            return "redirect:/admin/admin_search_member?search_select=" + search_select + "&search_keyword=" + search_keyword
+                    + "&order_select=" + order_select + "&page_select=" + page_select;
         }
 
         model.addAttribute("members", members);
@@ -103,25 +103,7 @@ public class AdminController {
     }
 
     @GetMapping("/admin_search_member")
-    public String admin_search_member(@RequestParam("search_select") String search_select, @RequestParam("search_keyword") String search_keyword, RedirectAttributes redirectAttributes){
-        List<MemberResponseDto> list = switch (search_select) {
-            case "all" -> adminService.findAllMemberByNone(search_keyword);
-            case "id" -> adminService.findAllMemberByMemberId(search_keyword);
-            case "name" -> adminService.findAllMemberByMemberName(search_keyword);
-            case "email" -> adminService.findAllMemberByMemberEmail(search_keyword);
-            default -> adminService.findAllMember();
-        };
-        System.out.println("진입");
-        redirectAttributes.addFlashAttribute("members",list);
-        redirectAttributes.addAttribute("search_select",search_select);
-        redirectAttributes.addAttribute("search_keyword",search_keyword);
-        redirectAttributes.addFlashAttribute("order_select","memberId_ASC");
-        redirectAttributes.addFlashAttribute("page_select","all");
-        return "redirect:/admin/admin_member";
-    }
-
-    @PostMapping("/admin_member_list_change")
-    public String admin_member_list_change(@ModelAttribute MemberSearchRequestDto dto, RedirectAttributes redirectAttributes){
+    public String admin_search_member(@ModelAttribute SearchRequestDto dto, RedirectAttributes redirectAttributes){
         List<MemberResponseDto> list = switch (dto.getSearch_select()) {
             case "all" -> adminService.findAllMemberByNoneOrderBy(dto.getSearch_keyword(), dto.getOrder_select(), dto.getPage_select());
             case "id" -> adminService.findAllMemberByMemberIdOrderBy(dto.getSearch_keyword(), dto.getOrder_select(), dto.getPage_select());
@@ -129,12 +111,11 @@ public class AdminController {
             case "email" -> adminService.findAllMemberByMemberEmailOrderBy(dto.getSearch_keyword(), dto.getOrder_select(), dto.getPage_select());
             default -> adminService.findAllMemberOrderBy(dto.getOrder_select(), dto.getPage_select());
         };
-
         redirectAttributes.addFlashAttribute("members",list);
         redirectAttributes.addAttribute("search_select", dto.getSearch_select());
         redirectAttributes.addAttribute("search_keyword", dto.getSearch_keyword());
-        redirectAttributes.addFlashAttribute("order_select", dto.getOrder_select());
-        redirectAttributes.addFlashAttribute("page_select", dto.getPage_select());
+        redirectAttributes.addAttribute("order_select", dto.getOrder_select());
+        redirectAttributes.addAttribute("page_select", dto.getPage_select());
         return "redirect:/admin/admin_member";
     }
 
@@ -155,7 +136,7 @@ public class AdminController {
     @GetMapping(value = "/admin_notice", params = {"search_select", "search_keyword"})
     public String admin_notice_search(HttpSession session,
                                @RequestParam("search_select") String search_select, @RequestParam("search_keyword") String search_keyword,
-                               @ModelAttribute("order_select") String order_select, @ModelAttribute("page_select") String page_select, Model model){
+                               @RequestParam("order_select") String order_select, @RequestParam("page_select") String page_select, Model model){
         if(session.getAttribute("adminId")!=null){
             model.addAttribute("isLogin","ok");
         }else{
@@ -164,10 +145,11 @@ public class AdminController {
         }
 
         List<CommunityResponseDto> communities = (List<CommunityResponseDto>) model.getAttribute("communities");
-        if (communities == null || communities.isEmpty()) {
+        if (communities == null) {
             search_select = URLEncoder.encode(search_select, StandardCharsets.UTF_8);
             search_keyword = URLEncoder.encode(search_keyword, StandardCharsets.UTF_8);
-            return "redirect:/admin/admin_search_community?search_select=" + search_select + "&search_keyword=" + search_keyword;
+            return "redirect:/admin/admin_search_community?search_select=" + search_select + "&search_keyword=" + search_keyword
+                    + "&order_select=" + order_select + "&page_select=" + page_select;
         }
 
         model.addAttribute("communityList", communities);
@@ -180,24 +162,7 @@ public class AdminController {
     }
 
     @GetMapping("/admin_search_community")
-    public String admin_search_community(@RequestParam("search_select") String search_select, @RequestParam("search_keyword") String search_keyword, RedirectAttributes redirectAttributes){
-        List<CommunityResponseDto> list = switch (search_select) {
-            case "all" -> adminService.findAllCommunityByNone(search_keyword);
-            case "title" -> adminService.findAllCommunityByNoticeTitle(search_keyword);
-            case "content" -> adminService.findAllCommunityByNoticeContent(search_keyword);
-            case "id" -> adminService.findAllCommunityByNoticeMemberId(search_keyword);
-            default -> adminService.findAllCommunity();
-        };
-        redirectAttributes.addFlashAttribute("communities",list);
-        redirectAttributes.addAttribute("search_select",search_select);
-        redirectAttributes.addAttribute("search_keyword",search_keyword);
-        redirectAttributes.addFlashAttribute("order_select","noticeIdx_ASC");
-        redirectAttributes.addFlashAttribute("page_select","all");
-        return "redirect:/admin/admin_notice";
-    }
-
-    @PostMapping("/admin_community_list_change")
-    public String admin_community_list_change(@ModelAttribute MemberSearchRequestDto dto, RedirectAttributes redirectAttributes){
+    public String admin_community_list_change(@ModelAttribute SearchRequestDto dto, RedirectAttributes redirectAttributes){
         List<CommunityResponseDto> list = switch (dto.getSearch_select()) {
             case "all" -> adminService.findAllCommunityByNoneOrderBy(dto.getSearch_keyword(), dto.getOrder_select(), dto.getPage_select());
             case "title" -> adminService.findAllCommunityByNoticeTitleOrderBy(dto.getSearch_keyword(), dto.getOrder_select(), dto.getPage_select());
@@ -209,8 +174,8 @@ public class AdminController {
         redirectAttributes.addFlashAttribute("communities",list);
         redirectAttributes.addAttribute("search_select", dto.getSearch_select());
         redirectAttributes.addAttribute("search_keyword", dto.getSearch_keyword());
-        redirectAttributes.addFlashAttribute("order_select", dto.getOrder_select());
-        redirectAttributes.addFlashAttribute("page_select", dto.getPage_select());
+        redirectAttributes.addAttribute("order_select", dto.getOrder_select());
+        redirectAttributes.addAttribute("page_select", dto.getPage_select());
         return "redirect:/admin/admin_notice";
     }
 

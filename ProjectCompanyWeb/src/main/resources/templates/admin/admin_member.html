@@ -69,7 +69,7 @@
       </div>
       <!-- 메인 -->
       <div id="adminSection">
-        <form action="/admin/admin_member_list_change" method="post" name="changeMemberList" onsubmit="return false">
+        <form action="/admin/admin_search_member" method="get" name="changeMemberList">
           <div class="adminDiv">
             <h3>회원관리</h3>
           </div>
@@ -89,7 +89,7 @@
               id="search_keyword"
               th:value="${search_keyword}"
             />
-            <button type="button" onclick="searchMember();" style="border: 0;background-color: transparent;">
+            <button type="submit" style="border: 0;background-color: transparent;">
               <img src="../img/community/search.gif" alt="검색" />
             </button>
           </div>
@@ -141,15 +141,6 @@
 
     <!-- 푸터 -->
     <div th:replace="/fragments/footer.html :: fragment-footer"></div>
-
-    <script>
-      function searchMember(){
-        let searchSelect = document.getElementById("search_select").value;
-        let searchKeyword = document.getElementById("search_keyword").value;
-        window.location.href=`/admin/admin_search_member?search_select=${searchSelect}&search_keyword=${searchKeyword}`;
-      }
-
-    </script>
 
     <script>
       // back to top 기능

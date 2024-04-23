@@ -1,6 +1,5 @@
 package com.study.ProjectCompanyWeb.customer.domain;
 
-import com.study.ProjectCompanyWeb.community.domain.Community;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

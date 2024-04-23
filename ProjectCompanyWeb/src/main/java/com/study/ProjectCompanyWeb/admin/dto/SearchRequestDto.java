@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MemberSearchRequestDto {
+public class SearchRequestDto {
     private String search_select;
     private String search_keyword;
     private String order_select;

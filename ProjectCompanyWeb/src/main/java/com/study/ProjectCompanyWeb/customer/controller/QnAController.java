@@ -1,6 +1,5 @@
 package com.study.ProjectCompanyWeb.customer.controller;
 
-import com.study.ProjectCompanyWeb.community.dto.CommunityResponseDto;
 import com.study.ProjectCompanyWeb.customer.dto.QnACheckPwRequestDto;
 import com.study.ProjectCompanyWeb.customer.dto.QnAResponseDto;
 import com.study.ProjectCompanyWeb.customer.service.QnAService;

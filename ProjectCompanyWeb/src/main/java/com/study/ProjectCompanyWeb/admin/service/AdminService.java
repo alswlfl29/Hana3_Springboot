@@ -39,34 +39,6 @@ public class AdminService {
     }
 
     @Transactional(readOnly = true)
-    public List<MemberResponseDto> findAllMemberByNone(String search_keyword){
-        Sort sort = Sort.by(Sort.Direction.ASC, "memberId");
-        List<Member> members = memberRepository.findAllMemberByNone(search_keyword, sort);
-        return members.stream().map(MemberResponseDto::new).collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public List<MemberResponseDto> findAllMemberByMemberId(String search_keyword){
-        Sort sort = Sort.by(Sort.Direction.ASC, "memberId");
-        List<Member> members = memberRepository.findAllMemberByMemberId(search_keyword, sort);
-        return members.stream().map(MemberResponseDto::new).collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public List<MemberResponseDto> findAllMemberByMemberName(String search_keyword){
-        Sort sort = Sort.by(Sort.Direction.ASC, "memberId");
-        List<Member> members = memberRepository.findAllMemberByMemberName(search_keyword, sort);
-        return members.stream().map(MemberResponseDto::new).collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public List<MemberResponseDto> findAllMemberByMemberEmail(String search_keyword){
-        Sort sort = Sort.by(Sort.Direction.ASC, "memberId");
-        List<Member> members = memberRepository.findAllMemberByMemberEmail(search_keyword, sort);
-        return members.stream().map(MemberResponseDto::new).collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
     public List<MemberResponseDto> findAllMemberByNoneOrderBy(String search_keyword, String order_select, String page_select){
         String[] orderSelect = order_select.split("_");
         Sort sort = Sort.by(orderSelect[1].equals("ASC")?Sort.Direction.ASC:Sort.Direction.DESC, orderSelect[0]);
@@ -136,34 +108,6 @@ public class AdminService {
         Sort sort = Sort.by(Sort.Direction.ASC, "noticeIdx");
         List<Community> members = communityRepository.findAll(sort);
         return members.stream().map(CommunityResponseDto::new).collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public List<CommunityResponseDto> findAllCommunityByNone(String search_keyword){
-        Sort sort = Sort.by(Sort.Direction.ASC, "noticeIdx");
-        List<Community> communities = communityRepository.findAllCommunityByNone(search_keyword, sort);
-        return communities.stream().map(CommunityResponseDto::new).collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public List<CommunityResponseDto> findAllCommunityByNoticeTitle(String search_keyword){
-        Sort sort = Sort.by(Sort.Direction.ASC, "noticeIdx");
-        List<Community> communities = communityRepository.findAllCommunityByNoticeTitle(search_keyword, sort);
-        return communities.stream().map(CommunityResponseDto::new).collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public List<CommunityResponseDto> findAllCommunityByNoticeContent(String search_keyword){
-        Sort sort = Sort.by(Sort.Direction.ASC, "noticeIdx");
-        List<Community> communities = communityRepository.findAllCommunityByNoticeContent(search_keyword, sort);
-        return communities.stream().map(CommunityResponseDto::new).collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public List<CommunityResponseDto> findAllCommunityByNoticeMemberId(String search_keyword){
-        Sort sort = Sort.by(Sort.Direction.ASC, "noticeIdx");
-        List<Community> communities = communityRepository.findAllCommunityByNoticeMemberId(search_keyword, sort);
-        return communities.stream().map(CommunityResponseDto::new).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

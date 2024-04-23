@@ -1,7 +1,5 @@
 package com.study.ProjectCompanyWeb.customer.service;
 
-import com.study.ProjectCompanyWeb.community.domain.Community;
-import com.study.ProjectCompanyWeb.community.dto.CommunityResponseDto;
 import com.study.ProjectCompanyWeb.customer.domain.QnA;
 import com.study.ProjectCompanyWeb.customer.domain.QnARepository;
 import com.study.ProjectCompanyWeb.customer.dto.QnAResponseDto;

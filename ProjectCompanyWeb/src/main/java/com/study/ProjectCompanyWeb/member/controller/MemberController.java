@@ -74,10 +74,11 @@ public class MemberController {
     }
 
     @GetMapping("/logoutAction")
+    @ResponseBody
     public String logoutAction(HttpSession session){
         session.setAttribute("userId",null);
         session.invalidate();
-        return "redirect:/";
+        return "<script>alert('로그아웃 되었습니다.');location.href='/';</script>";
     }
 
     @GetMapping("/idFind")
